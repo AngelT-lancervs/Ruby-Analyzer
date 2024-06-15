@@ -10,10 +10,16 @@ reserved = {
     'elsif' : 'ELSIF',
     'else' : 'ELSE',
     'for' : 'FOR',
-    'while' : 'WHILE'
+    'while' : 'WHILE',
 
-    
-
+    #Andrés Amador
+    'when' : 'WHEN',
+    'defined?' : 'DEFINED',
+    'in' : 'IN',
+    'module' : 'MODULE',
+    'self': 'SELF',
+    'unless': 'UNLESS',
+    'until': 'UNTIL'
 }
 
 
@@ -37,7 +43,24 @@ tokens = (
     'COMMA',
     'HASH'
 
-
+    #Andrés Amador
+    'MODULO_ASSIGN',
+    'EXPONENT_ASSIGN',
+    'EQUAL',
+    'NOT_EQUAL',
+    'GREATER',
+    'LESS',
+    'GREATER_EQUAL',
+    'LESS_EQUAL',
+    'COMPARE',
+    'CASE_EQUAL',
+    'NEWLINE',
+    'TAB',
+    'BACKSLASH',
+    'DOUBLE_QUOTE',
+    'LEFTPAR',
+    'RIGHTPAR',
+    'RANGE',
 ) + tuple(reserved.values())
 
 
@@ -52,6 +75,21 @@ t_BOOLEAN = r'\b(true|false)\b'
 t_SYMBOL = r':[a-zA-Z_]\w*'
 t_COMMA = r','
 t_HASH = r'\{[^{}]*\}'
+
+#Andrés Amador
+t_MODULO_ASSIGN = r'%='
+t_EXPONENT_ASSIGN = r'\*\*='
+t_EQUAL = r'=='
+t_NOT_EQUAL = r'!='
+t_GREATER = r'>'
+t_LESS = r'<'
+t_GREATER_EQUAL = r'>='
+t_LESS_EQUAL = r'<='
+t_COMPARE = r'<=>'
+t_CASE_EQUAL = r'==='
+t_LEFTPAR = r'\('
+t_RIGHTPAR = r'\)'
+t_RANGE = r'\((?:[^.]+\.\.\.?[^.]*|[^.]*\.\.\.?[^.]+)\)'
 
 def t_LOCAL_VAR(t):
     r'[_a-z]\w*'
@@ -87,6 +125,26 @@ def t_HEX_INTEGER(t):
 def t_NIL(t):
     r'\bnil\b'
     t.value = None
+    return t
+
+def t_NEWLINE(t):
+    r'\\n'
+    t.value = '\n'
+    return t
+
+def t_TAB(t):
+    r'\\t'
+    t.value = '\t'
+    return t
+
+def t_BACKSLASH(t):
+    r'\\\\'
+    t.value = '\\'
+    return t
+
+def t_DOUBLE_QUOTE(t):
+    r'\\"'
+    t.value = '"'
     return t
 
 def t_error(t):
