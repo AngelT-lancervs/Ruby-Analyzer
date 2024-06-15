@@ -33,7 +33,9 @@ tokens = (
     'STRING',
     'BOOLEAN',
     'NIL',
-    'SYMBOL'
+    'SYMBOL',
+    'COMMA',
+    'HASH'
 
 
 ) + tuple(reserved.values())
@@ -48,7 +50,8 @@ t_CONSTANT = r'[A-Z]\w*'
 t_STRING = r'"[^"]*"'
 t_BOOLEAN = r'\b(true|false)\b'
 t_SYMBOL = r':[a-zA-Z_]\w*'
-
+t_COMMA = r','
+t_HASH = r'\{[^{}]*\}'
 
 def t_LOCAL_VAR(t):
     r'[_a-z]\w*'
@@ -97,28 +100,79 @@ def t_newLine(t):
 t_ignore = ' \t'  # Ignora espacios y tabulaciones
 
 algoritmoAngel = '''
-@instance_var
-@@class_var
-$global_var
-CONSTANT
-123
-def my_function(param1, param2):
-    if param1 > param2:
-        return true
-    elsif param1 < param2:
-        return false
-    else:
-        return nil
+class Animal
+  def initialize(name, species)
+    @name = name
+    @species = species
+  end
+
+  def greet
+    puts "Hello, I'm #{@name}, a #{@species}."
+  end
+end
+
+class Zoo
+  attr_reader :animals
+
+  def initialize(name)
+    @name = name
+    @animals = []
+  end
+
+  def add_animal(animal)
+    @animals << animal
+  end
+
+  def show_animals
+    puts "Animals in #{@name} Zoo:"
+    @animals.each do |animal|
+      animal.greet
+    end
+  end
+end
+
+def fibonacci(n)
+  return n if n <= 1
+
+  fib = [0, 1]
+  (2..n).each do |i|
+    fib[i] = fib[i - 1] + fib[i - 2]
+  end
+
+  fib[n]
+end
+
+zoo = Zoo.new("Wildlife")
+zoo.add_animal(Animal.new("Buddy", "Dog"))
+zoo.add_animal(Animal.new("Charlie", "Cat"))
+zoo.add_animal(Animal.new("Ella", "Elephant"))
+
+zoo.show_animals
+
+puts "Fibonacci sequence:"
+10.times do |i|
+  puts "Fibonacci(#{i}): #{fibonacci(i)}"
+end
+
 '''
 
 #AGREGAR LOS TOKENS ":" "(" ")" ","
 
 lexer = lex.lex()
- 
+
+tokens_to_log = []
+
 lexer.input(algoritmoAngel)
 # Tokenizador
 while True:
     tok = lexer.token()
     if not tok:
         break
+    tokens_to_log.append(tok)
     print(tok)
+
+def save_tokens_to_log(github_username, current_time):
+    filename = f"logs/lexical-{github_username}-{current_time.strftime('%d%m%Y-%H%M')}.txt"
+    with open(filename, "w") as file:
+        for token in tokens_to_log:
+            file.write(str(token) + "\n")
