@@ -41,7 +41,7 @@ tokens = (
     'NIL',
     'SYMBOL',
     'COMMA',
-    'HASH'
+    'HASH',
 
     #Andrés Amador
     'MODULO_ASSIGN',
