@@ -60,7 +60,8 @@ tokens = (
     'DOUBLE_QUOTE',
     'LEFTPAR',
     'RIGHTPAR',
-    'RANGE',
+    'RANGEIN',
+    'RANGEEX',
 ) + tuple(reserved.values())
 
 
@@ -89,7 +90,8 @@ t_COMPARE = r'<=>'
 t_CASE_EQUAL = r'==='
 t_LEFTPAR = r'\('
 t_RIGHTPAR = r'\)'
-t_RANGE = r'\((?:[^.]+\.\.\.?[^.]*|[^.]*\.\.\.?[^.]+)\)'
+t_RANGEIN = r'\.\.'
+t_RANGEEX = r'\.\.\.'
 
 def t_LOCAL_VAR(t):
     r'[_a-z]\w*'
@@ -214,13 +216,67 @@ end
 
 '''
 
+algoritmoAmador = '''
+module Example
+  def self.calculate
+    a = 10
+    b = 20
+
+    unless a == b
+      a += 1
+      b **= 2
+      result = a % b
+    end
+
+    if a != b
+      puts "a is not equal to b"
+    end
+
+    range_inclusive = 1..10
+    range_exclusive = 1...10
+
+    if range_inclusive.include?(5)
+      puts "5 is in the inclusive range"
+    end
+
+    if range_exclusive.include?(10)
+      puts "10 is in the exclusive range"
+    end
+
+    case result
+    when 0
+      puts "Result is zero"
+    else
+      puts "Result is non-zero"
+    end
+
+    until result > 1000
+      result *= 2
+    end
+
+    result %= 3
+
+    puts "Final result: #{result}"
+  end
+
+  def self.check_defined
+    if defined? (@@class_variable)
+      puts "Class variable is defined"
+    end
+  end
+end
+
+Example.calculate
+Example.check_defined
+'''
+
 #AGREGAR LOS TOKENS ":" "(" ")" ","
 
 lexer = lex.lex()
 
 tokens_to_log = []
 
-lexer.input(algoritmoAngel)
+lexer.input(algoritmoAmador)
 # Tokenizador
 while True:
     tok = lexer.token()
