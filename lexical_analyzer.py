@@ -1,6 +1,14 @@
 import ply.lex as lex
 
 reserved = {
+    #Andrés Cornejo
+    'do': 'DO',
+    'break': 'BREAK',
+    'put': 'PUT',
+    'redo': 'REDO',
+    'BEGIN': 'BEGIN',
+    'END': 'END',
+    'case': 'CASE',
 
     #Angel Tomalá
     'def' : 'DEF',
@@ -21,18 +29,27 @@ reserved = {
     'unless': 'UNLESS',
     'until': 'UNTIL',
 
-    #Andrés Cornejo
-    'do': 'DO',
-    'break': 'BREAK',
-    'put': 'PUT',
-    'redo': 'REDO',
-    'BEGIN': 'BEGIN',
-    'END': 'END',
-    'case': 'CASE',
+
 }
 
 
 tokens = (
+    
+        #Andrés Cornejo
+    'AND',
+    'OR',
+    'NOT',
+    'PLUS',
+    'MINUS',
+    'MULTIPLY',
+    'DIVIDE',
+    'EXPONENT',
+    'MODULO',
+    'ASSIGN',
+    'PLUS_ASSIGN',
+    'MINUS_ASSIGN',
+    'MULTIPLY_ASSIGN',
+    'DIVIDE_ASSIGN',
 
     #Angel Tomalá
     'LOCAL_VAR',
@@ -72,24 +89,25 @@ tokens = (
     'RANGEIN',
     'RANGEEX',
 
-    #Andrés Amador
-    'AND',
-    'OR',
-    'NOT',
-    'PLUS',
-    'MINUS',
-    'MULTIPLY',
-    'DIVIDE',
-    'EXPONENT',
-    'MODULO',
-    'ASSIGN',
-    'PLUS_ASSIGN',
-    'MINUS_ASSIGN',
-    'MULTIPLY_ASSIGN',
-    'DIVIDE_ASSIGN',
+
 
 ) + tuple(reserved.values())
 
+#Andrés Cornejo
+t_AND = r'&&'
+t_OR = r'\|\|'
+t_NOT = r'!'
+t_PLUS = r'\+'
+t_MINUS = r'-'
+t_MULTIPLY = r'\*'
+t_DIVIDE = r'/'
+t_EXPONENT = r'\*\*'
+t_MODULO = r'%'
+t_ASSIGN = r'='
+t_PLUS_ASSIGN = r'\+='
+t_MINUS_ASSIGN = r'-='
+t_MULTIPLY_ASSIGN = r'\*='
+t_DIVIDE_ASSIGN = r'/='
 
 #Angel Tomalá
 
@@ -295,14 +313,51 @@ end
 Example.calculate
 Example.check_defined
 '''
+algoritmoCornejo= '''
+& &
+if a < b && b > a
+  puts "5"
+end
+| |
+if a > b || c
+  puts "This will not be printed"
+else
+  puts "4"
+end
 
+if !c
+  puts "a"
+end
+sum = a + b
+difference = a - b
+product = a * b
+quotient = b / a
+exponentiation = a ** 2
+modulo = b % a
+* *
+d = 5
+puts "Initial d: #{d}"
+
+d += a
+puts "d after += a: #{d}"
+
+d -= b
+puts "d after -= b: #{d}"
+
+d *= 2
+puts "d after *= 2: #{d}"
+
+d /= 3
+puts "d after /= 3: #{d}"
+
+'''
 #AGREGAR LOS TOKENS ":" "(" ")" ","
 
 lexer = lex.lex()
 
 tokens_to_log = []
 
-lexer.input(algoritmoAmador)
+lexer.input(algoritmoCornejo)
 # Tokenizador
 while True:
     tok = lexer.token()
