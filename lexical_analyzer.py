@@ -19,9 +19,16 @@ reserved = {
     'module' : 'MODULE',
     'self': 'SELF',
     'unless': 'UNLESS',
-    'until': 'UNTIL'
+    'until': 'UNTIL',
 
     #Andrés Cornejo
+    'do': 'DO',
+    'break': 'BREAK',
+    'put': 'PUT',
+    'redo': 'REDO',
+    'BEGIN': 'BEGIN',
+    'END': 'END',
+    'case': 'CASE',
 }
 
 
