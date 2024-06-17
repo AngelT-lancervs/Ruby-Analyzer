@@ -20,6 +20,8 @@ reserved = {
     'self': 'SELF',
     'unless': 'UNLESS',
     'until': 'UNTIL'
+
+    #Andrés Cornejo
 }
 
 
@@ -62,6 +64,23 @@ tokens = (
     'RIGHTPAR',
     'RANGEIN',
     'RANGEEX',
+
+    #Andrés Amador
+    'AND',
+    'OR',
+    'NOT',
+    'PLUS',
+    'MINUS',
+    'MULTIPLY',
+    'DIVIDE',
+    'EXPONENT',
+    'MODULO',
+    'ASSIGN',
+    'PLUS_ASSIGN',
+    'MINUS_ASSIGN',
+    'MULTIPLY_ASSIGN',
+    'DIVIDE_ASSIGN',
+
 ) + tuple(reserved.values())
 
 
