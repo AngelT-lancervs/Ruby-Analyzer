@@ -73,7 +73,6 @@ tokens = (
     'SYMBOL',
     'COMMA',
     'HASH',
-    'DOT',
     'COLON',
     'LEFT_COR',
     'RIGHT_COR',
@@ -105,8 +104,8 @@ tokens = (
 ) + tuple(reserved.values())
 
 #Andrés Cornejo
-t_AND = r'&'
-t_OR = r'\|'
+t_AND = r'&&'
+t_OR = r'\|\|'
 t_NOT = r'!'
 t_PLUS = r'\+'
 t_MINUS = r'-'
@@ -121,7 +120,6 @@ t_MULTIPLY_ASSIGN = r'\*='
 t_DIVIDE_ASSIGN = r'/='
 
 #Angel Tomalá
-
 t_INSTANCE_VAR = r'@[a-z_A-Z]\w*'
 t_CLASS_VAR = r'@{2}[a-z_A-Z]\w*'
 t_GLOBAL_VAR = r'\$[a-z_A-Z]\w*'
@@ -132,7 +130,6 @@ t_SYMBOL = r':[a-zA-Z_]\w*'
 t_COMMA = r','
 t_HASH = r'\{[^{}]*\}'
 t_COLON = r':'
-t_DOT = r'\.'
 t_RIGHT_COR = r'\]'
 t_LEFT_COR = r'\['
 t_PERCENTW = r'%\w'

@@ -114,8 +114,8 @@ def p_condiciones(p):
     '''
 
 def p_conectores(p):
-    ''' conectores : AND AND
-                   | OR OR
+    ''' conectores : AND
+                   | OR
     '''
 
 def p_condicion(p):
@@ -213,6 +213,7 @@ def p_error(p):
 
 
 parser = yacc.yacc()
+
 """
 while True:
     try:
@@ -225,6 +226,7 @@ while True:
     print(result)
 
 """
+
 
 #ASIGNAR AL ALGORITMO
 s = algoritmoAngel

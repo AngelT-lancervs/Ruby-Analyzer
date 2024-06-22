@@ -5,6 +5,8 @@ Unused terminals:
     BACKSLASH
     BEGIN
     BIN_INTEGER
+    BIT_AND
+    BIT_OR
     BOOLEAN
     BREAK
     CASE
@@ -97,8 +99,8 @@ Rule 44    ifStatement -> IF condiciones COLON codigo
 Rule 45    ifStatement -> IF condiciones COLON codigo else_statement
 Rule 46    condiciones -> condicion
 Rule 47    condiciones -> condiciones conectores condiciones
-Rule 48    conectores -> AND AND
-Rule 49    conectores -> OR OR
+Rule 48    conectores -> AND
+Rule 49    conectores -> OR
 Rule 50    condicion -> num operComp num
 Rule 51    operComp -> GREATER
 Rule 52    operComp -> LESS
@@ -111,12 +113,14 @@ Rule 58    else_statement -> ELSE COLON codigo
 
 Terminals, with rules where they appear
 
-AND                  : 48 48
+AND                  : 48
 ARRAY                : 37 38 39 40
 ASSIGN               : 42
 BACKSLASH            : 
 BEGIN                : 
 BIN_INTEGER          : 
+BIT_AND              : 
+BIT_OR               : 
 BOOLEAN              : 
 BREAK                : 
 CASE                 : 
@@ -171,7 +175,7 @@ NIL                  : 12
 NOT                  : 
 NOT_EQUAL            : 56
 OCT_INTEGER          : 
-OR                   : 49 49
+OR                   : 49
 PERCENTW             : 35 36
 PLUS                 : 
 PLUS_ASSIGN          : 
@@ -780,8 +784,8 @@ state 40
     (44) ifStatement -> IF condiciones . COLON codigo
     (45) ifStatement -> IF condiciones . COLON codigo else_statement
     (47) condiciones -> condiciones . conectores condiciones
-    (48) conectores -> . AND AND
-    (49) conectores -> . OR OR
+    (48) conectores -> . AND
+    (49) conectores -> . OR
 
     COLON           shift and go to state 51
     AND             shift and go to state 53
@@ -1029,16 +1033,18 @@ state 52
 
 state 53
 
-    (48) conectores -> AND . AND
+    (48) conectores -> AND .
 
-    AND             shift and go to state 73
+    FLOAT           reduce using rule 48 (conectores -> AND .)
+    INTEGER         reduce using rule 48 (conectores -> AND .)
 
 
 state 54
 
-    (49) conectores -> OR . OR
+    (49) conectores -> OR .
 
-    OR              shift and go to state 74
+    FLOAT           reduce using rule 49 (conectores -> OR .)
+    INTEGER         reduce using rule 49 (conectores -> OR .)
 
 
 state 55
@@ -1050,7 +1056,7 @@ state 55
     FLOAT           shift and go to state 33
     INTEGER         shift and go to state 34
 
-    num                            shift and go to state 75
+    num                            shift and go to state 73
 
 state 56
 
@@ -1112,7 +1118,7 @@ state 63
 
     (35) array_implicito -> PERCENTW LEFT_COR values_space . RIGHT_COR
 
-    RIGHT_COR       shift and go to state 76
+    RIGHT_COR       shift and go to state 74
 
 
 state 64
@@ -1129,7 +1135,7 @@ state 65
     (14) values_space -> value . SPACE values_space
     (15) values_space -> value .
 
-    SPACE           shift and go to state 77
+    SPACE           shift and go to state 75
     RIGHT_COR       reduce using rule 15 (values_space -> value .)
 
 
@@ -1137,7 +1143,7 @@ state 66
 
     (37) array_creation -> ARRAY LEFTPAR array_explicito . RIGHTPAR
 
-    RIGHTPAR        shift and go to state 78
+    RIGHTPAR        shift and go to state 76
 
 
 state 67
@@ -1149,7 +1155,7 @@ state 67
     $end            reduce using rule 38 (newArray -> ARRAY DOT NEW .)
     LEFT_COR        reduce using rule 38 (newArray -> ARRAY DOT NEW .)
     ELSE            reduce using rule 38 (newArray -> ARRAY DOT NEW .)
-    LEFTPAR         shift and go to state 79
+    LEFTPAR         shift and go to state 77
 
 
 state 68
@@ -1167,8 +1173,8 @@ state 69
     (25) gets -> GETS DOT CHOMP DOT . TO_F
     (26) gets -> GETS DOT CHOMP DOT . TO_I
 
-    TO_F            shift and go to state 80
-    TO_I            shift and go to state 81
+    TO_F            shift and go to state 78
+    TO_I            shift and go to state 79
 
 
 state 70
@@ -1187,18 +1193,18 @@ state 71
 
   ! shift/reduce conflict for ELSE resolved as shift
     $end            reduce using rule 44 (ifStatement -> IF condiciones COLON codigo .)
-    ELSE            shift and go to state 83
+    ELSE            shift and go to state 81
 
   ! ELSE            [ reduce using rule 44 (ifStatement -> IF condiciones COLON codigo .) ]
 
-    else_statement                 shift and go to state 82
+    else_statement                 shift and go to state 80
 
 state 72
 
     (47) condiciones -> condiciones conectores condiciones .
     (47) condiciones -> condiciones . conectores condiciones
-    (48) conectores -> . AND AND
-    (49) conectores -> . OR OR
+    (48) conectores -> . AND
+    (49) conectores -> . OR
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
@@ -1213,22 +1219,6 @@ state 72
 
 state 73
 
-    (48) conectores -> AND AND .
-
-    FLOAT           reduce using rule 48 (conectores -> AND AND .)
-    INTEGER         reduce using rule 48 (conectores -> AND AND .)
-
-
-state 74
-
-    (49) conectores -> OR OR .
-
-    FLOAT           reduce using rule 49 (conectores -> OR OR .)
-    INTEGER         reduce using rule 49 (conectores -> OR OR .)
-
-
-state 75
-
     (50) condicion -> num operComp num .
 
     COLON           reduce using rule 50 (condicion -> num operComp num .)
@@ -1236,7 +1226,7 @@ state 75
     OR              reduce using rule 50 (condicion -> num operComp num .)
 
 
-state 76
+state 74
 
     (35) array_implicito -> PERCENTW LEFT_COR values_space RIGHT_COR .
 
@@ -1245,7 +1235,7 @@ state 76
     ELSE            reduce using rule 35 (array_implicito -> PERCENTW LEFT_COR values_space RIGHT_COR .)
 
 
-state 77
+state 75
 
     (14) values_space -> value SPACE . values_space
     (14) values_space -> . value SPACE values_space
@@ -1275,11 +1265,11 @@ state 77
     INTEGER         shift and go to state 34
 
     value                          shift and go to state 65
-    values_space                   shift and go to state 84
+    values_space                   shift and go to state 82
     var                            shift and go to state 28
     num                            shift and go to state 29
 
-state 78
+state 76
 
     (37) array_creation -> ARRAY LEFTPAR array_explicito RIGHTPAR .
 
@@ -1288,15 +1278,15 @@ state 78
     ELSE            reduce using rule 37 (array_creation -> ARRAY LEFTPAR array_explicito RIGHTPAR .)
 
 
-state 79
+state 77
 
     (39) newArray -> ARRAY DOT NEW LEFTPAR . INTEGER RIGHTPAR
     (40) newArray -> ARRAY DOT NEW LEFTPAR . INTEGER COMMA values RIGHTPAR
 
-    INTEGER         shift and go to state 85
+    INTEGER         shift and go to state 83
 
 
-state 80
+state 78
 
     (25) gets -> GETS DOT CHOMP DOT TO_F .
 
@@ -1304,7 +1294,7 @@ state 80
     ELSE            reduce using rule 25 (gets -> GETS DOT CHOMP DOT TO_F .)
 
 
-state 81
+state 79
 
     (26) gets -> GETS DOT CHOMP DOT TO_I .
 
@@ -1312,7 +1302,7 @@ state 81
     ELSE            reduce using rule 26 (gets -> GETS DOT CHOMP DOT TO_I .)
 
 
-state 82
+state 80
 
     (45) ifStatement -> IF condiciones COLON codigo else_statement .
 
@@ -1320,30 +1310,30 @@ state 82
     ELSE            reduce using rule 45 (ifStatement -> IF condiciones COLON codigo else_statement .)
 
 
-state 83
+state 81
 
     (58) else_statement -> ELSE . COLON codigo
 
-    COLON           shift and go to state 86
+    COLON           shift and go to state 84
 
 
-state 84
+state 82
 
     (14) values_space -> value SPACE values_space .
 
     RIGHT_COR       reduce using rule 14 (values_space -> value SPACE values_space .)
 
 
-state 85
+state 83
 
     (39) newArray -> ARRAY DOT NEW LEFTPAR INTEGER . RIGHTPAR
     (40) newArray -> ARRAY DOT NEW LEFTPAR INTEGER . COMMA values RIGHTPAR
 
-    RIGHTPAR        shift and go to state 87
-    COMMA           shift and go to state 88
+    RIGHTPAR        shift and go to state 85
+    COMMA           shift and go to state 86
 
 
-state 86
+state 84
 
     (58) else_statement -> ELSE COLON . codigo
     (1) codigo -> . puts
@@ -1393,7 +1383,7 @@ state 86
     GLOBAL_VAR      shift and go to state 24
     CONSTANT        shift and go to state 25
 
-    codigo                         shift and go to state 89
+    codigo                         shift and go to state 87
     puts                           shift and go to state 2
     gets                           shift and go to state 3
     estructurasDatos               shift and go to state 4
@@ -1408,7 +1398,7 @@ state 86
     newArray                       shift and go to state 15
     var                            shift and go to state 16
 
-state 87
+state 85
 
     (39) newArray -> ARRAY DOT NEW LEFTPAR INTEGER RIGHTPAR .
 
@@ -1417,7 +1407,7 @@ state 87
     ELSE            reduce using rule 39 (newArray -> ARRAY DOT NEW LEFTPAR INTEGER RIGHTPAR .)
 
 
-state 88
+state 86
 
     (40) newArray -> ARRAY DOT NEW LEFTPAR INTEGER COMMA . values RIGHTPAR
     (16) values -> . value
@@ -1446,12 +1436,12 @@ state 88
     FLOAT           shift and go to state 33
     INTEGER         shift and go to state 34
 
-    values                         shift and go to state 90
+    values                         shift and go to state 88
     value                          shift and go to state 27
     var                            shift and go to state 28
     num                            shift and go to state 29
 
-state 89
+state 87
 
     (58) else_statement -> ELSE COLON codigo .
 
@@ -1459,14 +1449,14 @@ state 89
     $end            reduce using rule 58 (else_statement -> ELSE COLON codigo .)
 
 
-state 90
+state 88
 
     (40) newArray -> ARRAY DOT NEW LEFTPAR INTEGER COMMA values . RIGHTPAR
 
-    RIGHTPAR        shift and go to state 91
+    RIGHTPAR        shift and go to state 89
 
 
-state 91
+state 89
 
     (40) newArray -> ARRAY DOT NEW LEFTPAR INTEGER COMMA values RIGHTPAR .
 
