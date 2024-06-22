@@ -1,10 +1,11 @@
+import datetime
 import ply.lex as lex
 
 reserved = {
     #Andrés Cornejo
     'do': 'DO',
     'break': 'BREAK',
-    'put': 'PUT',
+    'puts': 'PUT',
     'redo': 'REDO',
     'BEGIN': 'BEGIN',
     'END': 'END',
@@ -19,6 +20,12 @@ reserved = {
     'else' : 'ELSE',
     'for' : 'FOR',
     'while' : 'WHILE',
+    'gets': 'GETS',
+    'chomp' : 'CHOMP',
+    'to_f': 'TO_F',
+    'to_i': 'TO_I',
+    'array': 'ARRAY',
+    'new' : 'NEW',
 
     #Andrés Amador
     'when' : 'WHEN',
@@ -27,9 +34,7 @@ reserved = {
     'module' : 'MODULE',
     'self': 'SELF',
     'unless': 'UNLESS',
-    'until': 'UNTIL',
-
-
+    'until': 'UNTIL'
 }
 
 
@@ -68,6 +73,12 @@ tokens = (
     'SYMBOL',
     'COMMA',
     'HASH',
+    'DOT',
+    'COLON',
+    'LEFT_COR',
+    'RIGHT_COR',
+    'PERCENTW',
+    'SPACE',
 
     #Andrés Amador
     'MODULO_ASSIGN',
@@ -94,8 +105,8 @@ tokens = (
 ) + tuple(reserved.values())
 
 #Andrés Cornejo
-t_AND = r'&&'
-t_OR = r'\|\|'
+t_AND = r'&'
+t_OR = r'\|'
 t_NOT = r'!'
 t_PLUS = r'\+'
 t_MINUS = r'-'
@@ -120,6 +131,12 @@ t_BOOLEAN = r'\b(true|false)\b'
 t_SYMBOL = r':[a-zA-Z_]\w*'
 t_COMMA = r','
 t_HASH = r'\{[^{}]*\}'
+t_COLON = r':'
+t_DOT = r'\.'
+t_RIGHT_COR = r'\]'
+t_LEFT_COR = r'\['
+t_PERCENTW = r'%\w'
+t_SPACE = r'\s'
 
 #Andrés Amador
 t_MODULO_ASSIGN = r'%='
@@ -143,14 +160,14 @@ def t_LOCAL_VAR(t):
         t.type = reserved[t.value]
     return t
 
-def t_INTEGER(t):
-    r'\d+'
-    t.value = int(t.value)
+def t_FLOAT(t):
+    r'(\d+\.\d*|\d*\.\d+)'
+    t.value = float(t.value)
     return t
 
-def t_FLOAT(t):
-    r'([1-9]\d*|0)\.\d+'
-    t.value = float(t.value)
+def t_INTEGER(t):
+    r'\d+'
+    t.value = int(t.value)    
     return t
 
 def t_BIN_INTEGER(t):
@@ -208,6 +225,7 @@ class Animal
   def initialize(name, species)
     @name = name
     @species = species
+    _numfloat = 3.21
   end
 
   def greet
@@ -236,7 +254,7 @@ class Zoo
 end
 
 def fibonacci(n)
-  return n if n <= 1
+  return n if n <= 1.4
 
   fib = [0, 1]
   (2..n).each do |i|
@@ -357,17 +375,17 @@ lexer = lex.lex()
 
 tokens_to_log = []
 
-lexer.input(algoritmoCornejo)
+lexer.input(algoritmoAngel)
 # Tokenizador
 while True:
     tok = lexer.token()
     if not tok:
         break
     tokens_to_log.append(tok)
-    print(tok)
+    #print(tok)
 
-def save_tokens_to_log(github_username, current_time):
-    filename = f"logs/lexical-{github_username}-{current_time.strftime('%d%m%Y-%H%M')}.txt"
+def save_tokens_to_log(github_user, date_hour):
+    filename = f"/logs/lexical/lexical-{github_user}-{date_hour.strftime('%d%m%Y-%H%M')}.txt"
     with open(filename, "w") as file:
         for token in tokens_to_log:
             file.write(str(token) + "\n")
