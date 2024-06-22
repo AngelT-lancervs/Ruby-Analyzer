@@ -99,9 +99,9 @@ tokens = (
     'RIGHTPAR',
     'RANGEIN',
     'RANGEEX',
-
-
-
+    'BIT_AND',
+    'BIT_OR',
+    'DOT',
 ) + tuple(reserved.values())
 
 #Andrés Cornejo
@@ -153,6 +153,9 @@ t_LEFTPAR = r'\('
 t_RIGHTPAR = r'\)'
 t_RANGEIN = r'\.\.'
 t_RANGEEX = r'\.\.\.'
+t_BIT_AND = r'&'
+t_BIT_OR = r'\|'
+t_DOT = r'\.'
 
 def t_LOCAL_VAR(t):
     r'[_a-z]\w*'
