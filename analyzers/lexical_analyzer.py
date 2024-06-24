@@ -55,6 +55,8 @@ tokens = (
     'MINUS_ASSIGN',
     'MULTIPLY_ASSIGN',
     'DIVIDE_ASSIGN',
+    'TRUE',
+    'FALSE',
 
     #Angel Tomalá
     'LOCAL_VAR',
@@ -119,6 +121,7 @@ t_MINUS_ASSIGN = r'-='
 t_MULTIPLY_ASSIGN = r'\*='
 t_DIVIDE_ASSIGN = r'/='
 
+
 #Angel Tomalá
 t_INSTANCE_VAR = r'@[a-z_A-Z]\w*'
 t_CLASS_VAR = r'@{2}[a-z_A-Z]\w*'
@@ -153,6 +156,15 @@ t_RANGEEX = r'\.\.\.'
 t_BIT_AND = r'&'
 t_BIT_OR = r'\|'
 t_DOT = r'\.'
+
+def t_TRUE(t):
+    r'\btrue\b'
+    return t
+
+
+def t_FALSE(t):
+    r'\bfalse\b'
+    return t
 
 def t_LOCAL_VAR(t):
     r'[_a-z]\w*'

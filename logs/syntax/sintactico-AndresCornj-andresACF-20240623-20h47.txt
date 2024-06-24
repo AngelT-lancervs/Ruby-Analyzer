@@ -1,0 +1,2 @@
+Error de sintaxis en linea 58, posicion 5: Token inesperado '(' 
+'LexToken(LEFTPAR,'(',58,5)'

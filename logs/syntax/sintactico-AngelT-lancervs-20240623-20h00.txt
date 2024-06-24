@@ -1,0 +1,8 @@
+Error de sintaxis en linea 58, posicion 1: Token inesperado 'class' 
+'LexToken(CLASS,'class',58,1)'
+Error de sintaxis en linea 76, posicion 278: Token inesperado 'end' 
+'LexToken(LOCAL_VAR,'end',76,278)'
+Error de sintaxis en linea 94, posicion 519: Token inesperado '(' 
+'LexToken(LEFTPAR,'(',94,519)'
+Error de sintaxis en linea 99, posicion 591: Token inesperado 'end' 
+'LexToken(LOCAL_VAR,'end',99,591)'

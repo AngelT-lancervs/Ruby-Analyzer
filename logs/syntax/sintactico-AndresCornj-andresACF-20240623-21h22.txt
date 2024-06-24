@@ -1,0 +1,18 @@
+Error de sintaxis en linea 59, posicion 13: Token inesperado 'puts' 
+'LexToken(PUT,'puts',59,13)'
+Token no admitido ''' at line 74
+Token no admitido ''' at line 74
+Error de sintaxis en linea 75, posicion 339: Token inesperado 'puts' 
+'LexToken(PUT,'puts',75,339)'
+Token no admitido ''' at line 77
+Token no admitido ''' at line 77
+Error de sintaxis en linea 79, posicion 387: Token inesperado 'mi_hash' 
+'LexToken(LOCAL_VAR,'mi_hash',79,387)'
+Token no admitido ''' at line 79
+Token no admitido ''' at line 79
+Error de sintaxis en linea 79, posicion 405: Token inesperado '=' 
+'LexToken(ASSIGN,'=',79,405)'
+Token no admitido ''' at line 79
+Token no admitido ''' at line 79
+Token no admitido ''' at line 81
+Token no admitido ''' at line 81
