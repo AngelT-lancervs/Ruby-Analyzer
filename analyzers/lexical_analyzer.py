@@ -34,7 +34,11 @@ reserved = {
     'module' : 'MODULE',
     'self': 'SELF',
     'unless': 'UNLESS',
-    'until': 'UNTIL'
+    'until': 'UNTIL',
+    'then': 'THEN',
+    'Set' : 'SET',
+    'Proc' : 'PROC',
+    'call' : 'CALL',
 }
 
 
@@ -100,9 +104,12 @@ tokens = (
     'RIGHTPAR',
     'RANGEIN',
     'RANGEEX',
-    'BIT_AND',
-    'BIT_OR',
+    'AMPERSAND',
+    'PIPE',
     'DOT',
+    'CARET',
+    'LBRACE',
+    'RBRACE',
 ) + tuple(reserved.values())
 
 #Andrés Cornejo
@@ -153,9 +160,12 @@ t_LEFTPAR = r'\('
 t_RIGHTPAR = r'\)'
 t_RANGEIN = r'\.\.'
 t_RANGEEX = r'\.\.\.'
-t_BIT_AND = r'&'
-t_BIT_OR = r'\|'
+t_AMPERSAND = r'&'
+t_PIPE = r'\|'
 t_DOT = r'\.'
+t_CARET = r'\^'
+t_LBRACE = r'\{'
+t_RBRACE = r'\}'
 
 def t_TRUE(t):
     r'\btrue\b'

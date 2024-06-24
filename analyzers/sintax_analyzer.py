@@ -10,6 +10,11 @@ def p_codigo(p):
                | gets
                | estructurasDatos
                | estructurasControl
+               | method_call
+               | block_assignment
+               | proc_assignment
+               | proc_call
+               | declaraciones
     '''
     
 def p_estructurasDatos(p):
@@ -19,12 +24,14 @@ def p_estructurasDatos(p):
                          | hash_declaration
                          | hash_access
                          | hash_operations
-    
+                         | set_expression
+                         | set_operations
     '''
 
 def p_estructurasControl(p):
     ''' estructurasControl : ifStatement
                            | while_statement
+                           | unless_expression
     '''
 
 #-----------------Angel Tomalá-----------------
@@ -238,7 +245,65 @@ def p_expresion(p):
     '''
 
 #-----------------Andrés Armador-----------------
+def p_set_expression(p):
+    """set_expression : SET DOT NEW LEFTPAR LEFT_COR values RIGHT_COR RIGHTPAR
+                      | SET LEFT_COR values RIGHT_COR"""
+    
+def p_set_operations(p):
+    """set_operations : set_expression
+                      | set_operations set_binary_operators set_expression"""
+    
+def p_set_declaration(p):
+    """declare_data_structures : LOCAL_VAR ASSIGN set_expression"""
+    
+def p_set_binary_operators(p):
+    """set_binary_operators : PLUS
+                            | MINUS
+                            | AMPERSAND
+                            | PIPE
+                            | CARET"""
+    
+def p_unless_expression(p):
+    """unless_expression : UNLESS boolean_expression THEN expresion END
+                         | UNLESS boolean_expression THEN expresion ELSE expresion END"""
 
+def p_arithmetic_expression(p):
+    """expresion : arithmetic_production"""
+
+def p_arithmetic_production(p):
+    """arithmetic_production : num
+                             | arithmetic_production arithmetic_operators num"""
+
+def p_arithmetic_operators(p):
+    """arithmetic_operators : PLUS
+                            | MINUS
+                            | MULTIPLY
+                            | DIVIDE
+                            | MODULO
+                            | EXPONENT"""
+    
+def p_block_expression(p):
+    """block_expression : LBRACE expresion RBRACE
+                         | DO expresion END
+                         | LBRACE PIPE LOCAL_VAR PIPE expresion RBRACE
+                         | DO PIPE LOCAL_VAR PIPE expresion END"""
+    
+def p_block_assignment(p):
+    """block_assignment : method_call block_expression"""
+
+def p_proc_expression(p):
+    """proc_expression : PROC DOT NEW block_expression"""
+
+def p_proc_assignment(p):
+    """proc_assignment : LOCAL_VAR ASSIGN proc_expression"""
+
+def p_proc_call(p):
+    """proc_call : LOCAL_VAR DOT CALL LEFTPAR values RIGHTPAR
+                 | LOCAL_VAR DOT LEFTPAR values RIGHTPAR
+                 | LOCAL_VAR LEFT_COR values RIGHT_COR"""
+    
+def p_condition_expr(p):
+    """expresion : condition_with_connectors"""
 
 
 #-----------------------------------------------------------------------
@@ -351,6 +416,63 @@ end
 
 """
 
+algoritmoAmador = """
+require 'set'
+
+# Declaración de Sets y operaciones de Sets
+set1 = Set.new([1, 2, 3])
+set2 = Set.new([3, 4, 5])
+
+union_set = set1 | set2
+intersection_set = set1 & set2
+difference_set = set1 - set2
+
+puts "Union de sets: #{union_set.to_a}"
+puts "Intersección de sets: #{intersection_set.to_a}"
+puts "Diferencia de sets: #{difference_set.to_a}"
+
+# Expresión unless
+x = 10
+y = 5
+
+unless y >= x
+  puts "y es menor que x"
+end
+
+unless x < y
+  puts "x no es menor que y"
+end
+
+# Expresión aritmética
+a = 10
+b = 5
+
+sum = a + b
+difference = a - b
+product = a * b
+quotient = a / b
+modulo = a % b
+
+puts "Suma: #{sum}"
+puts "Resta: #{difference}"
+puts "Producto: #{product}"
+puts "Cociente: #{quotient}"
+puts "Modulo: #{modulo}"
+
+# Asignación de block
+block = proc { |x| x * 2 }
+result = block.call(5)
+
+puts "Resultado del bloque: #{result}"
+
+# Asignación y llamada de procs
+my_proc = Proc.new { |x, y| x + y }
+proc_result = my_proc.call(2, 3)
+
+puts "Resultado del proc: #{proc_result}"
+
+"""
+
 def p_error(p):
     if p:
         error_msg = f"Error de sintaxis en linea {p.lineno}, posicion {p.lexpos}: Token inesperado '{p.value}' \n'{p}'"
@@ -376,8 +498,8 @@ while True:
 
 
 #ASIGNAR AL ALGORITMO
-s = algoritmoAndresCornejo
-log_filename = f"sintactico-AndresCornj-andresACF-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
+s = algoritmoAmador
+log_filename = f"sintactico-amadoran-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
 log_directory = "logs/syntax/"
 
 log_filepath = os.path.join(log_directory, log_filename)
