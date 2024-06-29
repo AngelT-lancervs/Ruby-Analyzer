@@ -10,6 +10,7 @@ reserved = {
     'BEGIN': 'BEGIN',
     'END': 'END',
     'case': 'CASE',
+    'end' : 'END_LOWER',
 
     #Angel Tomalá
     'def' : 'DEF',
@@ -26,6 +27,8 @@ reserved = {
     'to_i': 'TO_I',
     'array': 'ARRAY',
     'new' : 'NEW',
+    'and' : 'AND_RESERVED',
+    'or' : 'OR_RESERVED',
 
     #Andrés Amador
     'when' : 'WHEN',

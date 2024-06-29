@@ -119,8 +119,8 @@ def p_acceder_arreglo(p):
 
 # Estructura de control (if)
 def p_ifStatement(p):
-    ''' ifStatement : IF condiciones COLON codigo
-                     | IF condiciones COLON codigo else_statement
+    ''' ifStatement : IF condiciones NEWLINE codigo END_LOWER
+                     | IF condiciones NEWLINE codigo NEWLINE else_statement END_LOWER
     '''
 
 def p_condiciones(p):
@@ -131,10 +131,14 @@ def p_condiciones(p):
 def p_conectores(p):
     ''' conectores : AND
                    | OR
+                   | AND_RESERVED
+                   | OR_RESERVED
     '''
 
 def p_condicion(p):
     ''' condicion : num operComp num
+                  | var operComp num
+                  | num operComp var
     '''
 
 def p_operComp(p):
@@ -148,7 +152,7 @@ def p_operComp(p):
     '''
 
 def p_else_statement(p):
-    ''' else_statement : ELSE COLON codigo
+    ''' else_statement : ELSE NEWLINE codigo
     '''
 
 #-----------------Andrés Cornejo-----------------
@@ -172,7 +176,7 @@ def p_variable_declaration(p):
     '''
 
 def p_store_conditional_result(p):
-    ''' store_conditional_result : var ASSIGN ifStatement
+    ''' store_conditional_result : var ASSIGN condiciones
     '''
 
 def p_declare_data_structures(p):
@@ -272,7 +276,9 @@ def p_arithmetic_expression(p):
 
 def p_arithmetic_production(p):
     """arithmetic_production : num
-                             | arithmetic_production arithmetic_operators num"""
+                             | var
+                             | num arithmetic_operators arithmetic_production
+                             | var arithmetic_operators arithmetic_production"""
 
 def p_arithmetic_operators(p):
     """arithmetic_operators : PLUS
@@ -335,8 +341,10 @@ class Zoo
 
   def show_animals
     puts "Animals in #{@name} Zoo:"
-    @animals.each do |animal|
+    if @name == 3 
+        @animals.each do |animal|
       animal.greet
+        end
     end
   end
 end
@@ -483,7 +491,6 @@ def p_error(p):
 
 parser = yacc.yacc()
 
-"""
 while True:
     try:
         s = input('ruby > ')
@@ -494,18 +501,16 @@ while True:
     result = parser.parse(s)
     print(result)
 
-"""
-
 
 #ASIGNAR AL ALGORITMO
-s = algoritmoAmador
-log_filename = f"sintactico-amadoran-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
+s = algoritmoAngel
+log_filename = f"sintactico-AngelT-lancervs-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
 log_directory = "logs/syntax/"
 
 log_filepath = os.path.join(log_directory, log_filename)
 
 with open(log_filepath, "w") as f:
     sys.stdout = f
-    result = parser.parse(algoritmoAndresCornejo)
+    result = parser.parse(s)
     sys.stdout = sys.__stdout__
     print("Análisis completado. Los errores sintácticos se han guardado en el archivo de registro:", log_filename)
