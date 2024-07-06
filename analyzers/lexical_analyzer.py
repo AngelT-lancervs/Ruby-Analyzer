@@ -29,6 +29,7 @@ reserved = {
     'new' : 'NEW',
     'and' : 'AND_RESERVED',
     'or' : 'OR_RESERVED',
+    'to_s' : 'TO_S',
 
     #Andrés Amador
     'when' : 'WHEN',

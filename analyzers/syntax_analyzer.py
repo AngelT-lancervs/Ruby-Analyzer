@@ -4,6 +4,11 @@ import sys
 import ply.yacc as yacc
 from lexical_analyzer import tokens, reserved
 
+variablesString = {}
+variablesNum = {}
+variablesBool = {}
+arreglos = {}
+
 
 def p_codigo(p):
     ''' codigo : puts 
@@ -15,11 +20,11 @@ def p_codigo(p):
                | proc_assignment
                | proc_call
                | declaraciones
+               | expression
+               | to_string
     '''
-    
 def p_estructurasDatos(p):
     ''' estructurasDatos : array
-                         | var_arreglo
                          | acceder_arreglo
                          | hash_declaration
                          | hash_access
@@ -36,12 +41,13 @@ def p_estructurasControl(p):
 
 #-----------------Angel Tomalá-----------------
 def p_value(p):
-    ''' value : var
-             | num
+    ''' value : num
+             | var
              | STRING
              | NIL
              | SYMBOL
           '''
+    p[0] = p[1]
 
 def p_values_space(p):
     ''' values_space : value SPACE values_space
@@ -58,13 +64,14 @@ def p_var(p):
            | INSTANCE_VAR
            | CLASS_VAR
            | GLOBAL_VAR
-           | CONSTANT
            '''
+    p[0] = p[1]
 
 def p_num(p):
     ''' num : FLOAT
            | INTEGER
            '''
+    p[0] = p[1] #importante para la regla semantica conversión implicita (Angel Tomalá)
 
 def p_gets(p):
     ''' gets : GETS DOT CHOMP DOT TO_F
@@ -76,10 +83,6 @@ def p_puts(p):
     ''' puts : PUT values 
     '''
 
-
-
-
-
 # Estructura de datos (array)
 def p_array(p):
     ''' array : array_explicito
@@ -87,11 +90,18 @@ def p_array(p):
               | array_creation
               | newArray
     '''
+    p[0] = [p[1]]
+
+def p_var_arreglo(p):
+    ''' var_arreglo : LOCAL_VAR ASSIGN array
+    '''
+    arreglos[p[1]] = p[3]
 
 def p_array_explicito(p):
     ''' array_explicito : LEFT_COR values RIGHT_COR
                         | LEFT_COR RIGHT_COR
     '''
+    p[0] = p[2]
 
 def p_array_implicito(p):
     ''' array_implicito : PERCENTW LEFT_COR values_space RIGHT_COR
@@ -106,11 +116,6 @@ def p_newArray(p):
     ''' newArray : ARRAY DOT NEW 
                  | ARRAY DOT NEW LEFTPAR INTEGER RIGHTPAR
                  | ARRAY DOT NEW LEFTPAR INTEGER COMMA values RIGHTPAR
-    '''
-
-def p_var_arreglo(p):
-    ''' var_arreglo : var
-                    | var ASSIGN array
     '''
 
 def p_acceder_arreglo(p):
@@ -155,6 +160,51 @@ def p_else_statement(p):
     ''' else_statement : ELSE NEWLINE codigo
     '''
 
+def p_to_string(p):
+    ''' to_string : LOCAL_VAR DOT TO_S
+    '''
+    if p[1] in variablesNum or p[1] in variablesString:
+        variablesString[p[1]] = str(p[1])
+        if p[1] in variablesNum:
+            del variablesNum[p[1]]
+            return
+    else:
+        print(f"Error semántico, Variable '{p[1]}' no existe.")
+        return
+
+#REGLA SEMÁNTICA 2 ANGEL TOMALÁ (CONCATENACION DE STRINGS, TRANSFORMAR LOS NUMEROS ANTES DE CONCATENAR)
+def p_concatenar_string(p):
+    ''' concatenar_string : STRING PLUS STRING
+                          | STRING PLUS LOCAL_VAR
+                          | LOCAL_VAR PLUS STRING
+                          | LOCAL_VAR PLUS LOCAL_VAR
+    '''
+    for item in p:
+        if item != "+":
+            if isinstance(item, str):
+                if item in variablesNum:
+                    print(f"Error semántico, no se puede concatenar {item} sin convertir a string primero.")
+                    break
+        
+                if item not in variablesString and not item.startswith("\""):
+                    print(f"Error semántico, la variable '{item}' no existe.")
+                    break
+
+def p_declaracion_concatenar_string(p):
+    ''' declaracion_concatenar_string : LOCAL_VAR ASSIGN concatenar_string
+    '''
+    variablesString[p[1]] = str(p[3])
+
+# REGLA SEMÁNTICA 1 ANGEL TOMALÁ (CONVERSIÓN IMPLÍCITA DE ELEMENTOS)
+def convert_to_float(value):
+    if isinstance(value, int):
+        print(f"Convertido implicitamente {value} a float.")
+        return float(value)
+    elif isinstance(value, list):
+        # Asumiendo que value es una lista de subexpresiones, convierte cada una recursivamente
+        return [convert_to_float(v) for v in value]
+    return value
+
 #-----------------Andrés Cornejo-----------------
 # Estructuras de datos (hash)
 def p_hash_declaration(p):
@@ -172,16 +222,20 @@ def p_hash_operations(p):
 
 # Reglas sintácticas mínimas
 def p_variable_declaration(p):
-    ''' variable_declaration : var ASSIGN value
+    ''' variable_declaration : LOCAL_VAR ASSIGN value
     '''
+    if isinstance(p[3], str):
+        variablesString[p[1]] = p[3]
+    elif isinstance(p[3], int) or isinstance(p[3], float):
+        variablesNum[p[1]] = p[3]
 
 def p_store_conditional_result(p):
-    ''' store_conditional_result : var ASSIGN condiciones
+    ''' store_conditional_result : LOCAL_VAR ASSIGN condiciones
     '''
+    variablesBool[p[1]] = p[3]
 
 def p_declare_data_structures(p):
-    ''' declare_data_structures : variable_declaration
-                                | array
+    ''' declare_data_structures : var_arreglo
                                 | hash_declaration
     '''
 
@@ -239,6 +293,9 @@ def p_declaraciones(p):
     ''' declaraciones : variable_declaration
                       | store_conditional_result
                       | declare_data_structures
+                      | var_arreglo
+                      | LOCAL_VAR ASSIGN arithmetic_production
+                      | declaracion_concatenar_string
     '''
 
 # Expresiones
@@ -259,6 +316,7 @@ def p_set_operations(p):
     
 def p_set_declaration(p):
     """declare_data_structures : LOCAL_VAR ASSIGN set_expression"""
+
     
 def p_set_binary_operators(p):
     """set_binary_operators : PLUS
@@ -271,15 +329,35 @@ def p_unless_expression(p):
     """unless_expression : UNLESS boolean_expression THEN expresion END
                          | UNLESS boolean_expression THEN expresion ELSE expresion END"""
 
-def p_arithmetic_expression(p):
-    """expresion : arithmetic_production"""
-
 def p_arithmetic_production(p):
     """arithmetic_production : num
-                             | var
+                             | LOCAL_VAR
                              | num arithmetic_operators arithmetic_production
-                             | var arithmetic_operators arithmetic_production"""
+                             | LOCAL_VAR arithmetic_operators arithmetic_production"""
+    # REGLA SEMÁNTICA 1 ANGEL TOMALÁ (CONVERSIÓN IMPLÍCITA DE ELEMENTOS)
+    if len(p) == 2:
+        p[0] = p[1]
+    elif len(p) == 4:
 
+        p[1] = convert_to_float(p[1])
+        p[3] = convert_to_float(p[3])
+
+        if isinstance(p[1], str):
+            if p[1] not in variablesNum and p[1] not in variablesString:
+                print(f"Error semántico, la variable {p[1]} no existe.")
+                return
+            elif p[1] in variablesString:
+                print(f"Error semántico, la variable {p[1]} es una cadena y no puede participar en operaciones aritméticas.")
+                return
+
+        if isinstance(p[3], str):
+            if p[3] not in variablesNum and p[3] not in variablesString:
+                print(f"Error semántico, la variable {p[3]} no existe.")
+                return
+            elif p[3] in variablesString:
+                print(f"Error semántico, la variable {p[3]} es una cadena y no puede participar en operaciones aritméticas.")
+                return
+        
 def p_arithmetic_operators(p):
     """arithmetic_operators : PLUS
                             | MINUS
@@ -302,6 +380,7 @@ def p_proc_expression(p):
 
 def p_proc_assignment(p):
     """proc_assignment : LOCAL_VAR ASSIGN proc_expression"""
+    variablesString[p[1]] = p[3]
 
 def p_proc_call(p):
     """proc_call : LOCAL_VAR DOT CALL LEFTPAR values RIGHTPAR
