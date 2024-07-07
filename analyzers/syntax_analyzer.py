@@ -8,6 +8,7 @@ variablesString = {}
 variablesNum = {}
 variablesBool = {}
 arreglos = {}
+hashes = {}
 
 
 def p_codigo(p):
@@ -22,13 +23,13 @@ def p_codigo(p):
                | declaraciones
                | expression
                | to_string
+               | comparador
     '''
 def p_estructurasDatos(p):
     ''' estructurasDatos : array
                          | acceder_arreglo
-                         | hash_declaration
-                         | hash_access
                          | hash_operations
+                         | hash_var
                          | set_expression
                          | set_operations
     '''
@@ -81,6 +82,7 @@ def p_gets(p):
 
 def p_puts(p):
     ''' puts : PUT values 
+
     '''
 
 # Estructura de datos (array)
@@ -133,18 +135,22 @@ def p_condiciones(p):
                     | condiciones conectores condiciones
     '''
 
+
 def p_conectores(p):
     ''' conectores : AND
                    | OR
                    | AND_RESERVED
                    | OR_RESERVED
+                   | EQUAL
     '''
+
 
 def p_condicion(p):
     ''' condicion : num operComp num
                   | var operComp num
                   | num operComp var
     '''
+    
 
 def p_operComp(p):
     ''' operComp : GREATER
@@ -205,15 +211,48 @@ def convert_to_float(value):
         return [convert_to_float(v) for v in value]
     return value
 
+
+
 #-----------------Andrés Cornejo-----------------
 # Estructuras de datos (hash)
-def p_hash_declaration(p):
-    ''' hash_declaration : HASH LEFT_COR values RIGHT_COR
-                         | HASH LEFT_COR RIGHT_COR
+# REGLA SEMÁNTICA 2 ANDRÉS C0RNEJO (CLAVE DUPLICADA EN HASH)
+def p_hash_var(p):
+    ''' hash_var : LOCAL_VAR ASSIGN LBRACE hash_values RBRACE
+                 | LOCAL_VAR ASSIGN LBRACE RBRACE
     '''
+    if len(p) == 6:
+        # Verificar que p[4] no sea None antes de intentar fusionarlo
+        if p[4] is not None:
+            p[0] = {**p[4]}
+        else:
+            p[0] = None
+    else:
+        p[0] = {}
 
+def p_hash_values(p):
+    ''' hash_values : STRING HASH_ROCKET value
+                    | STRING HASH_ROCKET value COMMA hash_values
+    '''
+    if len(p) == 4:
+        p[0] = {p[1]: p[3]}
+    elif len(p) == 6:
+        # Verificar si hay una clave duplicada en p[5]
+        if p[1] in p[5]:
+            print(f"Error semántico: Clave duplicada '{p[1]}'.")
+            p[0] = None
+        else:
+            p[0] = {p[1]: p[3], **p[5]}
+
+def check_duplicate_keys(new_dict):
+    seen_keys = set()
+    for key in new_dict:
+        if key in seen_keys:
+            print(f"Error semántico: Clave duplicada '{key}'.")
+        seen_keys.add(key)
+
+        
 def p_hash_access(p):
-    ''' hash_access : var LEFT_COR value RIGHT_COR
+    ''' hash_access : var LBRACE value RBRACE
     '''
 
 def p_hash_operations(p):
@@ -236,7 +275,7 @@ def p_store_conditional_result(p):
 
 def p_declare_data_structures(p):
     ''' declare_data_structures : var_arreglo
-                                | hash_declaration
+                                | hash_var
     '''
 
 # Estructuras de control (while)
@@ -294,6 +333,7 @@ def p_declaraciones(p):
                       | store_conditional_result
                       | declare_data_structures
                       | var_arreglo
+                      | hash_var
                       | LOCAL_VAR ASSIGN arithmetic_production
                       | declaracion_concatenar_string
     '''
@@ -304,6 +344,50 @@ def p_expresion(p):
                  | gets
                  | print_statement
     '''
+
+
+
+# REGLA SEMÁNTICA 1 ANDRES CORNEJO (REGLAS DE TIPO EN UNA COMPARACIÓN)
+def p_comparador(p):
+    ''' comparador : value EQUAL value
+                   | value COMPARE value
+    '''
+    left_value = get_variable_value(p[1])
+    right_value = get_variable_value(p[3])
+
+    if left_value is None or right_value is None:
+        print("Error semántico: Variable no inicializada.")
+        p[0] = False
+        return
+    try:
+        result = left_value == right_value
+        if result:
+            print(f"La comparación '{left_value} == {right_value}' es Verdadera.")
+        else:
+            print(f"La comparación '{left_value} == {right_value}' es Falsa.")
+    except TypeError:
+        print(f"No se puede comparar '{left_value}' con '{right_value}'. Tipos de datos incompatibles.")
+        result = False
+
+    p[0] = result  # Asignar el resultado al índice cero de p
+
+# Aquí continúan las definiciones y funciones adicionales...
+#----------- Presencia de las variables en los diccionarios----Andrés Cornejo ------
+def get_variable_value(variable):
+    if isinstance(variable, str):
+        if variable in variablesNum:
+            return variablesNum[variable]
+        elif variable in variablesString:
+            return variablesString[variable]
+        elif variable in variablesBool:
+            return variablesBool[variable]
+        elif variable in hashes:
+            return hashes[variable]
+        else:
+            print(f"Error semántico: Variable '{variable}' no inicializada.")
+            return None
+    else:
+        return variable 
 
 #-----------------Andrés Armador-----------------
 def p_set_expression(p):

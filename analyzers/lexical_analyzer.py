@@ -3,6 +3,7 @@ import ply.lex as lex
 
 reserved = {
     #Andrés Cornejo
+    'nmap': 'NMAP',
     'do': 'DO',
     'break': 'BREAK',
     'puts': 'PUT',
@@ -49,6 +50,8 @@ reserved = {
 tokens = (
     
         #Andrés Cornejo
+    "QUOTATION",
+    'HASH_ROCKET',
     'AND',
     'OR',
     'NOT',
@@ -82,7 +85,6 @@ tokens = (
     'NIL',
     'SYMBOL',
     'COMMA',
-    'HASH',
     'COLON',
     'LEFT_COR',
     'RIGHT_COR',
@@ -117,6 +119,8 @@ tokens = (
 ) + tuple(reserved.values())
 
 #Andrés Cornejo
+t_QUOTATION = r'"'
+t_HASH_ROCKET = r'=>'
 t_AND = r'&&'
 t_OR = r'\|\|'
 t_NOT = r'!'
@@ -142,7 +146,6 @@ t_STRING = r'"[^"]*"'
 t_BOOLEAN = r'\b(true|false)\b'
 t_SYMBOL = r':[a-zA-Z_]\w*'
 t_COMMA = r','
-t_HASH = r'\{[^{}]*\}'
 t_COLON = r':'
 t_RIGHT_COR = r'\]'
 t_LEFT_COR = r'\['
