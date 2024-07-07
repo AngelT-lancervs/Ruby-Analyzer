@@ -711,10 +711,9 @@ def capture_semantic_errors(input_code):
 
 
 # Ejecutar la función para capturar errores semánticos en algoritmoAngel
-capture_semantic_errors(algoritmoAngelTomala)
+#capture_semantic_errors(algoritmoAngelTomala)
 
 # Lógica para capturar errores sintácticos
-
 while True:
     try:
         s = input('ruby > ')
@@ -734,7 +733,6 @@ while True:
         sys.stdout = sys.__stdout__
     
     print("Análisis completado. Los errores sintácticos se han guardado en el archivo de registro:", log_filename)
-
 
 ''' 
 while True:

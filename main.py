@@ -1,4 +1,3 @@
-import datetime
 import tkinter as tk
 from PIL import Image, ImageTk
 import analyzers.lexical_analyzer as lexical
@@ -11,16 +10,18 @@ class TextComponent:
         self.text_widget = text_widget
 
     def write(self, string):
+        self.text_widget.config(state=tk.NORMAL)  # Habilitar escritura
         self.text_widget.insert(tk.END, string)
         self.text_widget.see(tk.END)
-
+        self.text_widget.config(state=tk.DISABLED)  # Deshabilitar escritura
 
 def run_ruby(text_input):
+    text_console.config(state=tk.NORMAL)  # Habilitar escritura en la consola
     text_console.delete(1.0, tk.END) 
     sys.stdout = TextComponent(text_console)
     lexical.lexer.input(text_input)
     try:
-        for token in lexical.lexer: 
+        for token in lexical.lexer:
             print(token)
         lexical.lexer.lineno = 1
         syntax.parser.parse(text_input)
@@ -28,9 +29,10 @@ def run_ruby(text_input):
     except Exception as e:
         print(f"Error: {e}")
 
-    sys.stdout = sys.__stdout__
+    sys.stdout = sys.__stdout__  # Restaurar sys.stdout original
+    text_console.config(state=tk.DISABLED)  # Deshabilitar escritura en la consola
 
-#botón presionado
+# Función para el botón "Run"
 def on_run():
     input_text_content = text_code.get(1.0, tk.END)
     run_ruby(input_text_content)
@@ -68,9 +70,8 @@ text_console = tk.Text(frame_console, wrap=tk.WORD, bg="lightgrey", fg="black", 
 text_console.place(relx=0.5, rely=0.15, anchor="n", relwidth=0.9, relheight=0.8)
 
 # Cargar la imagen y colocarla en la esquina inferior derecha
-# Asegúrate de que la imagen esté en el mismo directorio que el script o proporciona la ruta correcta
 img = Image.open("ruby.png")
-img = img.resize((60,60))  # Cambiar el tamaño de la imagen si es necesario
+img = img.resize((60, 60))  # Cambiar el tamaño de la imagen si es necesario
 photo = ImageTk.PhotoImage(img)
 
 # Crear un label para la imagen y colocarla en la esquina inferior derecha
