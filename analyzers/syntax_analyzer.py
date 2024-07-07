@@ -675,7 +675,6 @@ d = 15
 d.to_s
 string  = "xd" + d
 jl = a -8
-
 """
 
 def p_error(p):
@@ -695,7 +694,7 @@ def capture_semantic_errors(input_code):
     if not os.path.exists(log_directory):
         os.makedirs(log_directory)
 
-    log_filename = f"semantic-andresACF{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
+    log_filename = f"semantic-AngelT-lancervs-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
     log_filepath = os.path.join(log_directory, log_filename)
 
     with open(log_filepath, "w") as f:
@@ -714,7 +713,7 @@ def capture_semantic_errors(input_code):
 
 
 # Ejecutar la función para capturar errores semánticos en algoritmoAngel
-capture_semantic_errors(algoritmoAndresCornejoSemantico)
+capture_semantic_errors(algoritmoAngelTomala)
 
 # Lógica para capturar errores sintácticos
 while True:

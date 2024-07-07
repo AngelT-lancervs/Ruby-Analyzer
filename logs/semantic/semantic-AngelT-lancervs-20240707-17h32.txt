@@ -1,0 +1,5 @@
+Convertido implicitamente 1 a float.
+Convertido implicitamente 8 a float.
+Error semántico, Variable 'op' no existe.
+Error de sintaxis en linea 57, posicion 11: Token inesperado '"xd"' 
+'LexToken(STRING,'"xd"',57,11)'

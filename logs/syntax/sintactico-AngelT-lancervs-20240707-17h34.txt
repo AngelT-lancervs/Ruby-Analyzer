@@ -1,0 +1,2 @@
+Error de sintaxis en linea 57, posicion 0: Token inesperado '/' 
+'LexToken(DIVIDE,'/',57,0)'
