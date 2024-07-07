@@ -1,0 +1,6 @@
+Error semántico: Clave duplicada '"Juan"'.
+Error en línea 3: argument of type 'NoneType' is not iterable
+Error semántico: Clave duplicada '"Pepe"'.
+La comparación '1 == 2' es Falsa.
+La comparación '2 == 3' es Falsa.
+La comparación '1 == 2' es Falsa.

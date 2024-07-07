@@ -1,0 +1,7 @@
+Error semántico: Clave duplicada '"Pepe"'.
+Error semántico: Variable 'a' no inicializada.
+Error semántico: Variable 'b' no inicializada.
+Error semántico: Variable no inicializada.
+Error semántico: Variable 'b' no inicializada.
+Error semántico: Variable no inicializada.
+La comparación '1 == 2' es Falsa.

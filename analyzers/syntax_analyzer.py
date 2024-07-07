@@ -643,6 +643,40 @@ proc_result = my_proc.call(2, 3)
 puts "Resultado del proc: #{proc_result}"
 
 """
+#------------------------
+algoritmoAndresCornejoSemantico = """
+hash={}
+hash={"Pepe" => 123, "Pepee" => 23, "Pepito" => 4232}
+hash={"Juan" => 123, "Juan" => 23, "Juan" => 4232}
+hash={"Juana" => 123, "Juan" => 23, "Jaunita" => 4232}
+hash={"Pepe" => 123, "Juan" => 23, "Pepe" => 4232}
+a = 1
+b = 2
+a == b
+a = 1
+b == 3
+b = 2
+a == b
+"""
+
+algoritmoAngelTomala = """
+op = 1-8
+op.to_s
+var3 = 4-5+"xd"
+lol = "bronce" + "plata"
+valorant = "neon" - 5
+lolmal = 4-lolitofede
+variable = a + 5
+a = 1 
+b = "xd"
+c = a + b
+var = 1 -8 +5 - num
+d = 15
+d.to_s
+string  = "xd" + d
+jl = a -8
+
+"""
 
 def p_error(p):
     if p:
@@ -652,8 +686,58 @@ def p_error(p):
     print(error_msg)
 
 
+
+
 parser = yacc.yacc()
 
+def capture_semantic_errors(input_code):
+    log_directory = "logs/semantic/"
+    if not os.path.exists(log_directory):
+        os.makedirs(log_directory)
+
+    log_filename = f"semantic-andresACF{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
+    log_filepath = os.path.join(log_directory, log_filename)
+
+    with open(log_filepath, "w") as f:
+        sys.stdout = f
+        lines = input_code.strip().split('\n')
+        for line_num, line in enumerate(lines, start=1):
+            try:
+                parser.parse(line)
+            except Exception as e:
+                print(f"Error en línea {line_num}: {e}")
+        sys.stdout = sys.__stdout__
+    
+    print("Análisis completado. Los errores semánticos se han guardado en el archivo de registro:", log_filename)
+
+# Algoritmo de ejemplo para errores sintácticos
+
+
+# Ejecutar la función para capturar errores semánticos en algoritmoAngel
+capture_semantic_errors(algoritmoAndresCornejoSemantico)
+
+# Lógica para capturar errores sintácticos
+while True:
+    try:
+        s = input('ruby > ')
+    except EOFError:
+        break
+    if not s:
+        continue
+    
+    # Definir el archivo de registro para errores sintácticos
+    log_filename = f"sintactico-AngelT-lancervs-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
+    log_directory = "logs/syntax/"
+    log_filepath = os.path.join(log_directory, log_filename)
+
+    with open(log_filepath, "w") as f:
+        sys.stdout = f
+        result = parser.parse(s)
+        sys.stdout = sys.__stdout__
+    
+    print("Análisis completado. Los errores sintácticos se han guardado en el archivo de registro:", log_filename)
+
+''' 
 while True:
     try:
         s = input('ruby > ')
@@ -677,3 +761,6 @@ with open(log_filepath, "w") as f:
     result = parser.parse(s)
     sys.stdout = sys.__stdout__
     print("Análisis completado. Los errores sintácticos se han guardado en el archivo de registro:", log_filename)
+
+
+'''
