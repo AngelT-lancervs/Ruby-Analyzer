@@ -2,7 +2,7 @@ import datetime
 import os
 import sys
 import ply.yacc as yacc
-from lexical_analyzer import tokens, reserved
+from analyzers.lexical_analyzer import tokens, reserved
 
 variablesString = {}
 variablesNum = {}
@@ -685,8 +685,6 @@ def p_error(p):
     print(error_msg)
 
 
-
-
 parser = yacc.yacc()
 
 def capture_semantic_errors(input_code):
@@ -716,6 +714,7 @@ def capture_semantic_errors(input_code):
 capture_semantic_errors(algoritmoAngelTomala)
 
 # Lógica para capturar errores sintácticos
+
 while True:
     try:
         s = input('ruby > ')
@@ -735,6 +734,7 @@ while True:
         sys.stdout = sys.__stdout__
     
     print("Análisis completado. Los errores sintácticos se han guardado en el archivo de registro:", log_filename)
+
 
 ''' 
 while True:

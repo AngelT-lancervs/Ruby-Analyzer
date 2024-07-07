@@ -1,0 +1,17 @@
+Convertido implicitamente 1 a float.
+Convertido implicitamente 8 a float.
+Error semántico, Variable 'op' no existe.
+Error de sintaxis en linea 57, posicion 11: Token inesperado '"xd"' 
+'LexToken(STRING,'"xd"',57,11)'
+Error de sintaxis en linea 57, posicion 18: Token inesperado '-' 
+'LexToken(MINUS,'-',57,18)'
+Convertido implicitamente 4 a float.
+Error semántico, la variable lolitofede no existe.
+Convertido implicitamente 5 a float.
+Error semántico, la variable a no existe.
+Error semántico, no se puede concatenar a sin convertir a string primero.
+Convertido implicitamente 5 a float.
+Error semántico, la variable num no existe.
+Convertido implicitamente 8 a float.
+Convertido implicitamente 1 a float.
+Convertido implicitamente 8 a float.
