@@ -141,7 +141,6 @@ t_DIVIDE_ASSIGN = r'/='
 t_INSTANCE_VAR = r'@[a-z_A-Z]\w*'
 t_CLASS_VAR = r'@{2}[a-z_A-Z]\w*'
 t_GLOBAL_VAR = r'\$[a-z_A-Z]\w*'
-t_CONSTANT = r'[A-Z]\w*'
 t_STRING = r'"[^"]*"'
 t_BOOLEAN = r'\b(true|false)\b'
 t_SYMBOL = r':[a-zA-Z_]\w*'
@@ -185,6 +184,12 @@ def t_FALSE(t):
 
 def t_LOCAL_VAR(t):
     r'[_a-z]\w*'
+    if t.value in reserved:
+        t.type = reserved[t.value]
+    return t
+
+def t_CONSTANT(t):
+    r'[A-Z]\w*'
     if t.value in reserved:
         t.type = reserved[t.value]
     return t
@@ -308,6 +313,7 @@ end
 '''
 
 algoritmoAmador = '''
+Proc
 module Example
   def self.calculate
     a = 10

@@ -1,0 +1,2 @@
+Error de sintaxis en linea 57, posicion 10: Token inesperado 'Proc' 
+'LexToken(CONSTANT,'Proc',57,10)'

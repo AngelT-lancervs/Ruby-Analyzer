@@ -2,29 +2,33 @@ import datetime
 import os
 import sys
 import ply.yacc as yacc
-from analyzers.lexical_analyzer import tokens, reserved
+from lexical_analyzer import tokens, reserved
 
 variablesString = {}
 variablesNum = {}
 variablesBool = {}
+variablesProc = {}
 arreglos = {}
 hashes = {}
 
 
 def p_codigo(p):
-    ''' codigo : puts 
-               | gets
-               | estructurasDatos
-               | estructurasControl
-               | method_call
-               | block_assignment
-               | proc_assignment
-               | proc_call
-               | declaraciones
-               | expression
-               | to_string
-               | comparador
-    '''
+    '''codigo : sentencia
+              | codigo sentencia'''
+    
+def p_sentencia(p):
+    '''sentencia : puts 
+                 | gets
+                 | estructurasDatos
+                 | estructurasControl
+                 | method_call
+                 | block_assignment
+                 | proc_call
+                 | declaraciones
+                 | expression
+                 | to_string
+                 | comparador'''
+
 def p_estructurasDatos(p):
     ''' estructurasDatos : array
                          | acceder_arreglo
@@ -280,7 +284,7 @@ def p_declare_data_structures(p):
 
 # Estructuras de control (while)
 def p_while_statement(p):
-    ''' while_statement : WHILE condiciones COLON codigo
+    ''' while_statement : WHILE condiciones codigo END_LOWER
     '''
 
 # Reglas sintácticas mínimas
@@ -290,8 +294,8 @@ def p_condition_with_connectors(p):
 
 # Funciones
 def p_method_call(p):
-    ''' method_call : var LEFTPAR values RIGHTPAR
-                    | var LEFTPAR RIGHTPAR
+    ''' method_call : LOCAL_VAR LEFTPAR values RIGHTPAR
+                    | LOCAL_VAR LEFTPAR RIGHTPAR
     '''
 
 def p_print_statement(p):
@@ -336,6 +340,7 @@ def p_declaraciones(p):
                       | hash_var
                       | LOCAL_VAR ASSIGN arithmetic_production
                       | declaracion_concatenar_string
+                      | proc_assignment
     '''
 
 # Expresiones
@@ -453,8 +458,10 @@ def p_arithmetic_operators(p):
 def p_block_expression(p):
     """block_expression : LBRACE expresion RBRACE
                          | DO expresion END
+                         | DO expresion END_LOWER
                          | LBRACE PIPE LOCAL_VAR PIPE expresion RBRACE
-                         | DO PIPE LOCAL_VAR PIPE expresion END"""
+                         | DO PIPE LOCAL_VAR PIPE expresion END
+                         | DO PIPE LOCAL_VAR PIPE expresion END_LOWER"""
     
 def p_block_assignment(p):
     """block_assignment : method_call block_expression"""
@@ -462,14 +469,20 @@ def p_block_assignment(p):
 def p_proc_expression(p):
     """proc_expression : PROC DOT NEW block_expression"""
 
+#REGLA SEMANTICA ANDRÉS AMADOR (LLAMADA DE PROCS)
 def p_proc_assignment(p):
     """proc_assignment : LOCAL_VAR ASSIGN proc_expression"""
-    variablesString[p[1]] = p[3]
+    variablesProc[p[1]] = p[3]
 
 def p_proc_call(p):
     """proc_call : LOCAL_VAR DOT CALL LEFTPAR values RIGHTPAR
                  | LOCAL_VAR DOT LEFTPAR values RIGHTPAR
                  | LOCAL_VAR LEFT_COR values RIGHT_COR"""
+    
+    if p[1] in variablesProc:
+        pass
+    else:
+        print(f"Error semántico: La variable{p[1]} no existe o no es un proc")
     
 def p_condition_expr(p):
     """expresion : condition_with_connectors"""
@@ -677,6 +690,9 @@ string  = "xd" + d
 jl = a -8
 """
 
+algoritmoSemanticoAmador = """my_proc = Proc.new do puts 2 end
+my_proc.call()"""
+
 def p_error(p):
     if p:
         error_msg = f"Error de sintaxis en linea {p.lineno}, posicion {p.lexpos}: Token inesperado '{p.value}' \n'{p}'"
@@ -692,7 +708,7 @@ def capture_semantic_errors(input_code):
     if not os.path.exists(log_directory):
         os.makedirs(log_directory)
 
-    log_filename = f"semantic-AngelT-lancervs-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
+    log_filename = f"semantic-amadoran-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
     log_filepath = os.path.join(log_directory, log_filename)
 
     with open(log_filepath, "w") as f:
@@ -711,7 +727,7 @@ def capture_semantic_errors(input_code):
 
 
 # Ejecutar la función para capturar errores semánticos en algoritmoAngel
-#capture_semantic_errors(algoritmoAngelTomala)
+capture_semantic_errors(algoritmoSemanticoAmador)
 
 # Lógica para capturar errores sintácticos
 while True:
