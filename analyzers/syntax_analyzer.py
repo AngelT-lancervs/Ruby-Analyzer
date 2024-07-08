@@ -477,12 +477,15 @@ def p_proc_assignment(p):
 def p_proc_call(p):
     """proc_call : LOCAL_VAR DOT CALL LEFTPAR values RIGHTPAR
                  | LOCAL_VAR DOT LEFTPAR values RIGHTPAR
-                 | LOCAL_VAR LEFT_COR values RIGHT_COR"""
+                 | LOCAL_VAR LEFT_COR values RIGHT_COR
+                 | LOCAL_VAR DOT CALL LEFTPAR RIGHTPAR
+                 | LOCAL_VAR DOT LEFTPAR RIGHTPAR
+                 | LOCAL_VAR LEFT_COR RIGHT_COR"""
     
     if p[1] in variablesProc:
         pass
     else:
-        print(f"Error semántico: La variable{p[1]} no existe o no es un proc")
+        print(f"Error semántico: La variable \"{p[1]}\" no existe o no es un proc")
     
 def p_condition_expr(p):
     """expresion : condition_with_connectors"""
@@ -691,7 +694,11 @@ jl = a -8
 """
 
 algoritmoSemanticoAmador = """my_proc = Proc.new do puts 2 end
-my_proc.call()"""
+my_proc.call()
+my_proc.()
+my_proc[]
+other_proc.call()
+"""
 
 def p_error(p):
     if p:
