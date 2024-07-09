@@ -1,0 +1,49 @@
+numero = 3
+string = "ola"
+numero2 = 2
+string2 = "si"
+arreglo = [1, 2, 3, 4, 5]
+arregloStr = ["objeto", "o", "pastel"]
+arreglovacio = []
+arregloFunct = array.new(4)
+arreglo[5]
+
+gets.chomp.to_i
+gets.chomp.to_f
+gets.chomp
+
+if numero < 3 or numero < 5
+	puts "ola"
+	suma1 = 21 + 8
+	resta1 = 8-9.5
+	multiplicacion1 = 5*8.6
+	operacion = numero+ 2
+	numeroastring = 4
+	numeroastring.to_s
+	concatenarString = "string" + numeroastring
+	hash={}
+	a == 0
+else
+	a = 10
+	if a > 4
+  		puts "a es mayor que 4"
+	else
+  		puts "a no es mayor que 4"
+		while contador < 5 :
+  			puts "Contador: #{contador}"
+  			contador = 1
+			contador = 1 + contador
+		hash={"Pepe" => 123, "Pepee" => 23, "Pepito" => 4232}
+		
+	end
+end
+
+bool = 1==3
+string2 = "lp" + "mejor materia"
+muchasoperaciones = 4+8/9**6+5.99
+valor = 5
+var4 = valor + 5 -560 - valor * valor /6
+hash={"Pepe" => 123, "Juan" => 23, "Pepel" => 4232}
+nombre = mi_hash[7]
+arrayCreation = array([7])
+arrayImplicito = %w[7]
