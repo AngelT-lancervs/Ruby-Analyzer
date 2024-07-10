@@ -2,7 +2,7 @@ import datetime
 import os
 import sys
 import ply.yacc as yacc
-from lexical_analyzer import tokens, reserved
+from analyzers.lexical_analyzer import tokens, reserved
 
 variablesString = {}
 variablesNum = {}
@@ -265,7 +265,11 @@ def p_hash_operations(p):
 
 # Reglas sintácticas mínimas
 def p_variable_declaration(p):
-    ''' variable_declaration : LOCAL_VAR ASSIGN value
+    ''' variable_declaration : var ASSIGN value
+                             | var PLUS_ASSIGN value
+                             | var MULTIPLY_ASSIGN value
+                             | var MINUS_ASSIGN value
+                             | var DIVIDE_ASSIGN value
     '''
     if isinstance(p[3], str):
         variablesString[p[1]] = p[3]
@@ -735,7 +739,7 @@ def capture_semantic_errors(input_code):
 
 # Ejecutar la función para capturar errores semánticos en algoritmoAngel
 capture_semantic_errors(algoritmoSemanticoAmador)
-
+''' 
 # Lógica para capturar errores sintácticos
 while True:
     try:
@@ -756,7 +760,7 @@ while True:
         sys.stdout = sys.__stdout__
     
     print("Análisis completado. Los errores sintácticos se han guardado en el archivo de registro:", log_filename)
-
+''' 
 ''' 
 while True:
     try:
