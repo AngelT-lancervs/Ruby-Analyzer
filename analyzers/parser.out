@@ -128,7 +128,7 @@ Rule 88    variable_declaration -> var ASSIGN value
 Rule 89    variable_declaration -> var PLUS_ASSIGN value
 Rule 90    variable_declaration -> var MULTIPLY_ASSIGN value
 Rule 91    variable_declaration -> var MINUS_ASSIGN value
-Rule 92    variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value
+Rule 92    variable_declaration -> var DIVIDE_ASSIGN value
 Rule 93    store_conditional_result -> LOCAL_VAR ASSIGN condiciones
 Rule 94    declare_data_structures -> var_arreglo
 Rule 95    declare_data_structures -> hash_var
@@ -262,7 +262,7 @@ LEFTPAR              : 51 53 54 98 99 100 132 163 164 166 167
 LEFT_COR             : 47 48 49 50 55 132 133 165 168
 LESS                 : 69 102
 LESS_EQUAL           : 71 104
-LOCAL_VAR            : 32 46 76 78 79 80 80 81 82 83 92 93 98 99 114 124 136 145 147 157 158 159 162 163 164 165 166 167 168
+LOCAL_VAR            : 32 46 76 78 79 80 80 81 82 83 93 98 99 114 124 136 145 147 157 158 159 162 163 164 165 166 167 168
 MINUS                : 138 149
 MINUS_ASSIGN         : 91
 MODULE               : 
@@ -363,7 +363,7 @@ unless_expression    : 22
 value                : 28 29 30 31 84 85 86 87 88 89 90 91 92 130 130 131 131
 values               : 31 41 47 54 98 100 132 133 163 164 165
 values_space         : 28 49
-var                  : 24 66 67 86 88 89 90 91
+var                  : 24 66 67 86 88 89 90 91 92
 var_arreglo          : 55 94 122
 variable             : 112
 variable_declaration : 119
@@ -445,7 +445,7 @@ state 0
     (89) variable_declaration -> . var PLUS_ASSIGN value
     (90) variable_declaration -> . var MULTIPLY_ASSIGN value
     (91) variable_declaration -> . var MINUS_ASSIGN value
-    (92) variable_declaration -> . LOCAL_VAR DIVIDE_ASSIGN value
+    (92) variable_declaration -> . var DIVIDE_ASSIGN value
     (93) store_conditional_result -> . LOCAL_VAR ASSIGN condiciones
     (94) declare_data_structures -> . var_arreglo
     (95) declare_data_structures -> . hash_var
@@ -610,7 +610,7 @@ state 1
     (89) variable_declaration -> . var PLUS_ASSIGN value
     (90) variable_declaration -> . var MULTIPLY_ASSIGN value
     (91) variable_declaration -> . var MINUS_ASSIGN value
-    (92) variable_declaration -> . LOCAL_VAR DIVIDE_ASSIGN value
+    (92) variable_declaration -> . var DIVIDE_ASSIGN value
     (93) store_conditional_result -> . LOCAL_VAR ASSIGN condiciones
     (94) declare_data_structures -> . var_arreglo
     (95) declare_data_structures -> . hash_var
@@ -1508,7 +1508,6 @@ state 25
     (76) to_string -> LOCAL_VAR . DOT TO_S
     (82) hash_var -> LOCAL_VAR . ASSIGN LBRACE hash_values RBRACE
     (83) hash_var -> LOCAL_VAR . ASSIGN LBRACE RBRACE
-    (92) variable_declaration -> LOCAL_VAR . DIVIDE_ASSIGN value
     (93) store_conditional_result -> LOCAL_VAR . ASSIGN condiciones
     (136) declare_data_structures -> LOCAL_VAR . ASSIGN set_expression
     (46) var_arreglo -> LOCAL_VAR . ASSIGN array
@@ -1523,7 +1522,6 @@ state 25
     DOT             shift and go to state 79
     LEFT_COR        shift and go to state 80
     ASSIGN          shift and go to state 81
-    DIVIDE_ASSIGN   shift and go to state 82
     PUT             reduce using rule 114 (variable -> LOCAL_VAR .)
     GETS            reduce using rule 114 (variable -> LOCAL_VAR .)
     LOCAL_VAR       reduce using rule 114 (variable -> LOCAL_VAR .)
@@ -1548,6 +1546,7 @@ state 25
     PLUS_ASSIGN     reduce using rule 32 (var -> LOCAL_VAR .)
     MULTIPLY_ASSIGN reduce using rule 32 (var -> LOCAL_VAR .)
     MINUS_ASSIGN    reduce using rule 32 (var -> LOCAL_VAR .)
+    DIVIDE_ASSIGN   reduce using rule 32 (var -> LOCAL_VAR .)
     LBRACE          reduce using rule 32 (var -> LOCAL_VAR .)
     EQUAL           reduce using rule 32 (var -> LOCAL_VAR .)
     COMPARE         reduce using rule 32 (var -> LOCAL_VAR .)
@@ -1574,7 +1573,7 @@ state 26
     (34) var -> . CLASS_VAR
     (35) var -> . GLOBAL_VAR
 
-    RIGHT_COR       shift and go to state 84
+    RIGHT_COR       shift and go to state 83
     STRING          shift and go to state 64
     NIL             shift and go to state 53
     SYMBOL          shift and go to state 54
@@ -1585,7 +1584,7 @@ state 26
     CLASS_VAR       shift and go to state 69
     GLOBAL_VAR      shift and go to state 70
 
-    values                         shift and go to state 83
+    values                         shift and go to state 82
     value                          shift and go to state 62
     num                            shift and go to state 52
     var                            shift and go to state 63
@@ -1703,7 +1702,7 @@ state 30
   ! reduce/reduce conflict for $end resolved using rule 94 (declare_data_structures -> var_arreglo .)
   ! reduce/reduce conflict for END_LOWER resolved using rule 94 (declare_data_structures -> var_arreglo .)
   ! reduce/reduce conflict for NEWLINE resolved using rule 94 (declare_data_structures -> var_arreglo .)
-    LEFT_COR        shift and go to state 85
+    LEFT_COR        shift and go to state 84
     PUT             reduce using rule 94 (declare_data_structures -> var_arreglo .)
     GETS            reduce using rule 94 (declare_data_structures -> var_arreglo .)
     LOCAL_VAR       reduce using rule 94 (declare_data_structures -> var_arreglo .)
@@ -1940,8 +1939,8 @@ state 37
     (130) comparador -> value . EQUAL value
     (131) comparador -> value . COMPARE value
 
-    EQUAL           shift and go to state 86
-    COMPARE         shift and go to state 87
+    EQUAL           shift and go to state 85
+    COMPARE         shift and go to state 86
 
 
 state 38
@@ -2060,7 +2059,7 @@ state 42
 
     (87) hash_operations -> hash_access . ASSIGN value
 
-    ASSIGN          shift and go to state 88
+    ASSIGN          shift and go to state 87
 
 
 state 43
@@ -2068,8 +2067,8 @@ state 43
     (132) set_expression -> SET . DOT NEW LEFTPAR LEFT_COR values RIGHT_COR RIGHTPAR
     (133) set_expression -> SET . LEFT_COR values RIGHT_COR
 
-    DOT             shift and go to state 89
-    LEFT_COR        shift and go to state 90
+    DOT             shift and go to state 88
+    LEFT_COR        shift and go to state 89
 
 
 state 44
@@ -2095,10 +2094,10 @@ state 44
     CLASS_VAR       shift and go to state 69
     GLOBAL_VAR      shift and go to state 70
 
-    condiciones                    shift and go to state 91
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condiciones                    shift and go to state 90
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
 state 45
 
@@ -2122,10 +2121,10 @@ state 45
     CLASS_VAR       shift and go to state 69
     GLOBAL_VAR      shift and go to state 70
 
-    condiciones                    shift and go to state 95
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condiciones                    shift and go to state 94
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
 state 46
 
@@ -2150,20 +2149,20 @@ state 46
     (117) variable -> . GLOBAL_VAR
     (118) variable -> . CONSTANT
 
-    INTEGER         shift and go to state 99
-    FLOAT           shift and go to state 100
-    STRING          shift and go to state 101
-    TRUE            shift and go to state 102
-    FALSE           shift and go to state 103
-    LOCAL_VAR       shift and go to state 104
-    INSTANCE_VAR    shift and go to state 105
-    CLASS_VAR       shift and go to state 106
-    GLOBAL_VAR      shift and go to state 107
+    INTEGER         shift and go to state 98
+    FLOAT           shift and go to state 99
+    STRING          shift and go to state 100
+    TRUE            shift and go to state 101
+    FALSE           shift and go to state 102
+    LOCAL_VAR       shift and go to state 103
+    INSTANCE_VAR    shift and go to state 104
+    CLASS_VAR       shift and go to state 105
+    GLOBAL_VAR      shift and go to state 106
     CONSTANT        shift and go to state 51
 
-    boolean_expression             shift and go to state 96
-    expression                     shift and go to state 97
-    boolean_value                  shift and go to state 98
+    boolean_expression             shift and go to state 95
+    expression                     shift and go to state 96
+    boolean_value                  shift and go to state 97
     variable                       shift and go to state 35
 
 state 47
@@ -2172,13 +2171,15 @@ state 47
     (89) variable_declaration -> var . PLUS_ASSIGN value
     (90) variable_declaration -> var . MULTIPLY_ASSIGN value
     (91) variable_declaration -> var . MINUS_ASSIGN value
+    (92) variable_declaration -> var . DIVIDE_ASSIGN value
     (24) value -> var .
     (86) hash_access -> var . LBRACE value RBRACE
 
-    ASSIGN          shift and go to state 108
-    PLUS_ASSIGN     shift and go to state 109
-    MULTIPLY_ASSIGN shift and go to state 110
-    MINUS_ASSIGN    shift and go to state 111
+    ASSIGN          shift and go to state 107
+    PLUS_ASSIGN     shift and go to state 108
+    MULTIPLY_ASSIGN shift and go to state 109
+    MINUS_ASSIGN    shift and go to state 110
+    DIVIDE_ASSIGN   shift and go to state 111
     EQUAL           reduce using rule 24 (value -> var .)
     COMPARE         reduce using rule 24 (value -> var .)
     LBRACE          shift and go to state 112
@@ -2215,6 +2216,7 @@ state 48
     PLUS_ASSIGN     reduce using rule 33 (var -> INSTANCE_VAR .)
     MULTIPLY_ASSIGN reduce using rule 33 (var -> INSTANCE_VAR .)
     MINUS_ASSIGN    reduce using rule 33 (var -> INSTANCE_VAR .)
+    DIVIDE_ASSIGN   reduce using rule 33 (var -> INSTANCE_VAR .)
     LBRACE          reduce using rule 33 (var -> INSTANCE_VAR .)
     EQUAL           reduce using rule 33 (var -> INSTANCE_VAR .)
     COMPARE         reduce using rule 33 (var -> INSTANCE_VAR .)
@@ -2251,6 +2253,7 @@ state 49
     PLUS_ASSIGN     reduce using rule 34 (var -> CLASS_VAR .)
     MULTIPLY_ASSIGN reduce using rule 34 (var -> CLASS_VAR .)
     MINUS_ASSIGN    reduce using rule 34 (var -> CLASS_VAR .)
+    DIVIDE_ASSIGN   reduce using rule 34 (var -> CLASS_VAR .)
     LBRACE          reduce using rule 34 (var -> CLASS_VAR .)
     EQUAL           reduce using rule 34 (var -> CLASS_VAR .)
     COMPARE         reduce using rule 34 (var -> CLASS_VAR .)
@@ -2287,6 +2290,7 @@ state 50
     PLUS_ASSIGN     reduce using rule 35 (var -> GLOBAL_VAR .)
     MULTIPLY_ASSIGN reduce using rule 35 (var -> GLOBAL_VAR .)
     MINUS_ASSIGN    reduce using rule 35 (var -> GLOBAL_VAR .)
+    DIVIDE_ASSIGN   reduce using rule 35 (var -> GLOBAL_VAR .)
     LBRACE          reduce using rule 35 (var -> GLOBAL_VAR .)
     EQUAL           reduce using rule 35 (var -> GLOBAL_VAR .)
     COMPARE         reduce using rule 35 (var -> GLOBAL_VAR .)
@@ -2555,9 +2559,9 @@ state 59
     print_statement                shift and go to state 120
     condition_with_connectors      shift and go to state 121
     condiciones                    shift and go to state 123
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
 state 60
 
@@ -2603,9 +2607,9 @@ state 60
     print_statement                shift and go to state 120
     condition_with_connectors      shift and go to state 121
     condiciones                    shift and go to state 123
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
 state 61
 
@@ -3232,50 +3236,21 @@ state 81
     concatenar_string              shift and go to state 142
     proc_expression                shift and go to state 143
     num                            shift and go to state 144
-    condicion                      shift and go to state 92
+    condicion                      shift and go to state 91
     array_explicito                shift and go to state 38
     array_implicito                shift and go to state 39
     array_creation                 shift and go to state 40
     newArray                       shift and go to state 41
-    var                            shift and go to state 94
+    var                            shift and go to state 93
 
 state 82
 
-    (92) variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN . value
-    (23) value -> . num
-    (24) value -> . var
-    (25) value -> . STRING
-    (26) value -> . NIL
-    (27) value -> . SYMBOL
-    (36) num -> . FLOAT
-    (37) num -> . INTEGER
-    (32) var -> . LOCAL_VAR
-    (33) var -> . INSTANCE_VAR
-    (34) var -> . CLASS_VAR
-    (35) var -> . GLOBAL_VAR
-
-    STRING          shift and go to state 64
-    NIL             shift and go to state 53
-    SYMBOL          shift and go to state 54
-    FLOAT           shift and go to state 65
-    INTEGER         shift and go to state 66
-    LOCAL_VAR       shift and go to state 67
-    INSTANCE_VAR    shift and go to state 68
-    CLASS_VAR       shift and go to state 69
-    GLOBAL_VAR      shift and go to state 70
-
-    value                          shift and go to state 147
-    num                            shift and go to state 52
-    var                            shift and go to state 63
-
-state 83
-
     (47) array_explicito -> LEFT_COR values . RIGHT_COR
 
-    RIGHT_COR       shift and go to state 148
+    RIGHT_COR       shift and go to state 147
 
 
-state 84
+state 83
 
     (48) array_explicito -> LEFT_COR RIGHT_COR .
 
@@ -3304,16 +3279,45 @@ state 84
     RIGHTPAR        reduce using rule 48 (array_explicito -> LEFT_COR RIGHT_COR .)
 
 
-state 85
+state 84
 
     (55) acceder_arreglo -> var_arreglo LEFT_COR . INTEGER RIGHT_COR
 
-    INTEGER         shift and go to state 149
+    INTEGER         shift and go to state 148
 
+
+state 85
+
+    (130) comparador -> value EQUAL . value
+    (23) value -> . num
+    (24) value -> . var
+    (25) value -> . STRING
+    (26) value -> . NIL
+    (27) value -> . SYMBOL
+    (36) num -> . FLOAT
+    (37) num -> . INTEGER
+    (32) var -> . LOCAL_VAR
+    (33) var -> . INSTANCE_VAR
+    (34) var -> . CLASS_VAR
+    (35) var -> . GLOBAL_VAR
+
+    STRING          shift and go to state 64
+    NIL             shift and go to state 53
+    SYMBOL          shift and go to state 54
+    FLOAT           shift and go to state 65
+    INTEGER         shift and go to state 66
+    LOCAL_VAR       shift and go to state 67
+    INSTANCE_VAR    shift and go to state 68
+    CLASS_VAR       shift and go to state 69
+    GLOBAL_VAR      shift and go to state 70
+
+    value                          shift and go to state 149
+    num                            shift and go to state 52
+    var                            shift and go to state 63
 
 state 86
 
-    (130) comparador -> value EQUAL . value
+    (131) comparador -> value COMPARE . value
     (23) value -> . num
     (24) value -> . var
     (25) value -> . STRING
@@ -3342,7 +3346,7 @@ state 86
 
 state 87
 
-    (131) comparador -> value COMPARE . value
+    (87) hash_operations -> hash_access ASSIGN . value
     (23) value -> . num
     (24) value -> . var
     (25) value -> . STRING
@@ -3371,41 +3375,12 @@ state 87
 
 state 88
 
-    (87) hash_operations -> hash_access ASSIGN . value
-    (23) value -> . num
-    (24) value -> . var
-    (25) value -> . STRING
-    (26) value -> . NIL
-    (27) value -> . SYMBOL
-    (36) num -> . FLOAT
-    (37) num -> . INTEGER
-    (32) var -> . LOCAL_VAR
-    (33) var -> . INSTANCE_VAR
-    (34) var -> . CLASS_VAR
-    (35) var -> . GLOBAL_VAR
-
-    STRING          shift and go to state 64
-    NIL             shift and go to state 53
-    SYMBOL          shift and go to state 54
-    FLOAT           shift and go to state 65
-    INTEGER         shift and go to state 66
-    LOCAL_VAR       shift and go to state 67
-    INSTANCE_VAR    shift and go to state 68
-    CLASS_VAR       shift and go to state 69
-    GLOBAL_VAR      shift and go to state 70
-
-    value                          shift and go to state 152
-    num                            shift and go to state 52
-    var                            shift and go to state 63
-
-state 89
-
     (132) set_expression -> SET DOT . NEW LEFTPAR LEFT_COR values RIGHT_COR RIGHTPAR
 
-    NEW             shift and go to state 153
+    NEW             shift and go to state 152
 
 
-state 90
+state 89
 
     (133) set_expression -> SET LEFT_COR . values RIGHT_COR
     (30) values -> . value
@@ -3432,12 +3407,12 @@ state 90
     CLASS_VAR       shift and go to state 69
     GLOBAL_VAR      shift and go to state 70
 
-    values                         shift and go to state 154
+    values                         shift and go to state 153
     value                          shift and go to state 62
     num                            shift and go to state 52
     var                            shift and go to state 63
 
-state 91
+state 90
 
     (56) ifStatement -> IF condiciones . NEWLINE codigo END_LOWER
     (57) ifStatement -> IF condiciones . NEWLINE codigo NEWLINE else_statement END_LOWER
@@ -3448,16 +3423,16 @@ state 91
     (63) conectores -> . OR_RESERVED
     (64) conectores -> . EQUAL
 
-    NEWLINE         shift and go to state 155
-    AND             shift and go to state 157
-    OR              shift and go to state 158
-    AND_RESERVED    shift and go to state 159
-    OR_RESERVED     shift and go to state 160
-    EQUAL           shift and go to state 161
+    NEWLINE         shift and go to state 154
+    AND             shift and go to state 156
+    OR              shift and go to state 157
+    AND_RESERVED    shift and go to state 158
+    OR_RESERVED     shift and go to state 159
+    EQUAL           shift and go to state 160
 
-    conectores                     shift and go to state 156
+    conectores                     shift and go to state 155
 
-state 92
+state 91
 
     (58) condiciones -> condicion .
 
@@ -3493,7 +3468,7 @@ state 92
     ELSE            reduce using rule 58 (condiciones -> condicion .)
 
 
-state 93
+state 92
 
     (65) condicion -> num . operComp num
     (67) condicion -> num . operComp var
@@ -3505,17 +3480,17 @@ state 93
     (73) operComp -> . NOT_EQUAL
     (74) operComp -> . COMPARE
 
-    GREATER         shift and go to state 163
-    LESS            shift and go to state 164
-    GREATER_EQUAL   shift and go to state 165
-    LESS_EQUAL      shift and go to state 166
-    EQUAL           shift and go to state 167
-    NOT_EQUAL       shift and go to state 168
-    COMPARE         shift and go to state 169
+    GREATER         shift and go to state 162
+    LESS            shift and go to state 163
+    GREATER_EQUAL   shift and go to state 164
+    LESS_EQUAL      shift and go to state 165
+    EQUAL           shift and go to state 166
+    NOT_EQUAL       shift and go to state 167
+    COMPARE         shift and go to state 168
 
-    operComp                       shift and go to state 162
+    operComp                       shift and go to state 161
 
-state 94
+state 93
 
     (66) condicion -> var . operComp num
     (68) operComp -> . GREATER
@@ -3526,17 +3501,17 @@ state 94
     (73) operComp -> . NOT_EQUAL
     (74) operComp -> . COMPARE
 
-    GREATER         shift and go to state 163
-    LESS            shift and go to state 164
-    GREATER_EQUAL   shift and go to state 165
-    LESS_EQUAL      shift and go to state 166
-    EQUAL           shift and go to state 167
-    NOT_EQUAL       shift and go to state 168
-    COMPARE         shift and go to state 169
+    GREATER         shift and go to state 162
+    LESS            shift and go to state 163
+    GREATER_EQUAL   shift and go to state 164
+    LESS_EQUAL      shift and go to state 165
+    EQUAL           shift and go to state 166
+    NOT_EQUAL       shift and go to state 167
+    COMPARE         shift and go to state 168
 
-    operComp                       shift and go to state 170
+    operComp                       shift and go to state 169
 
-state 95
+state 94
 
     (96) while_statement -> WHILE condiciones . codigo END_LOWER
     (59) condiciones -> condiciones . conectores condiciones
@@ -3616,7 +3591,7 @@ state 95
     (89) variable_declaration -> . var PLUS_ASSIGN value
     (90) variable_declaration -> . var MULTIPLY_ASSIGN value
     (91) variable_declaration -> . var MINUS_ASSIGN value
-    (92) variable_declaration -> . LOCAL_VAR DIVIDE_ASSIGN value
+    (92) variable_declaration -> . var DIVIDE_ASSIGN value
     (93) store_conditional_result -> . LOCAL_VAR ASSIGN condiciones
     (94) declare_data_structures -> . var_arreglo
     (95) declare_data_structures -> . hash_var
@@ -3650,11 +3625,11 @@ state 95
     (36) num -> . FLOAT
     (37) num -> . INTEGER
 
-    AND             shift and go to state 157
-    OR              shift and go to state 158
-    AND_RESERVED    shift and go to state 159
-    OR_RESERVED     shift and go to state 160
-    EQUAL           shift and go to state 161
+    AND             shift and go to state 156
+    OR              shift and go to state 157
+    AND_RESERVED    shift and go to state 158
+    OR_RESERVED     shift and go to state 159
+    EQUAL           shift and go to state 160
     PUT             shift and go to state 14
     GETS            shift and go to state 15
     LOCAL_VAR       shift and go to state 25
@@ -3675,8 +3650,8 @@ state 95
     PERCENTW        shift and go to state 55
     ARRAY           shift and go to state 56
 
-    codigo                         shift and go to state 171
-    conectores                     shift and go to state 156
+    codigo                         shift and go to state 170
+    conectores                     shift and go to state 155
     sentencia                      shift and go to state 2
     puts                           shift and go to state 3
     gets                           shift and go to state 4
@@ -3714,15 +3689,15 @@ state 95
     var                            shift and go to state 47
     num                            shift and go to state 52
 
-state 96
+state 95
 
     (142) unless_expression -> UNLESS boolean_expression . THEN expresion END
     (143) unless_expression -> UNLESS boolean_expression . THEN expresion ELSE expresion END
 
-    THEN            shift and go to state 172
+    THEN            shift and go to state 171
 
 
-state 97
+state 96
 
     (101) boolean_expression -> expression . GREATER expression
     (102) boolean_expression -> expression . LESS expression
@@ -3731,22 +3706,22 @@ state 97
     (105) boolean_expression -> expression . EQUAL expression
     (106) boolean_expression -> expression . NOT_EQUAL expression
 
-    GREATER         shift and go to state 173
-    LESS            shift and go to state 174
-    GREATER_EQUAL   shift and go to state 175
-    LESS_EQUAL      shift and go to state 176
-    EQUAL           shift and go to state 177
-    NOT_EQUAL       shift and go to state 178
+    GREATER         shift and go to state 172
+    LESS            shift and go to state 173
+    GREATER_EQUAL   shift and go to state 174
+    LESS_EQUAL      shift and go to state 175
+    EQUAL           shift and go to state 176
+    NOT_EQUAL       shift and go to state 177
 
 
-state 98
+state 97
 
     (107) boolean_expression -> boolean_value .
 
     THEN            reduce using rule 107 (boolean_expression -> boolean_value .)
 
 
-state 99
+state 98
 
     (110) expression -> INTEGER .
 
@@ -3759,7 +3734,7 @@ state 99
     THEN            reduce using rule 110 (expression -> INTEGER .)
 
 
-state 100
+state 99
 
     (111) expression -> FLOAT .
 
@@ -3772,7 +3747,7 @@ state 100
     THEN            reduce using rule 111 (expression -> FLOAT .)
 
 
-state 101
+state 100
 
     (113) expression -> STRING .
 
@@ -3785,21 +3760,21 @@ state 101
     THEN            reduce using rule 113 (expression -> STRING .)
 
 
-state 102
+state 101
 
     (108) boolean_value -> TRUE .
 
     THEN            reduce using rule 108 (boolean_value -> TRUE .)
 
 
-state 103
+state 102
 
     (109) boolean_value -> FALSE .
 
     THEN            reduce using rule 109 (boolean_value -> FALSE .)
 
 
-state 104
+state 103
 
     (114) variable -> LOCAL_VAR .
 
@@ -3812,7 +3787,7 @@ state 104
     THEN            reduce using rule 114 (variable -> LOCAL_VAR .)
 
 
-state 105
+state 104
 
     (115) variable -> INSTANCE_VAR .
 
@@ -3825,7 +3800,7 @@ state 105
     THEN            reduce using rule 115 (variable -> INSTANCE_VAR .)
 
 
-state 106
+state 105
 
     (116) variable -> CLASS_VAR .
 
@@ -3838,7 +3813,7 @@ state 106
     THEN            reduce using rule 116 (variable -> CLASS_VAR .)
 
 
-state 107
+state 106
 
     (117) variable -> GLOBAL_VAR .
 
@@ -3851,9 +3826,38 @@ state 107
     THEN            reduce using rule 117 (variable -> GLOBAL_VAR .)
 
 
-state 108
+state 107
 
     (88) variable_declaration -> var ASSIGN . value
+    (23) value -> . num
+    (24) value -> . var
+    (25) value -> . STRING
+    (26) value -> . NIL
+    (27) value -> . SYMBOL
+    (36) num -> . FLOAT
+    (37) num -> . INTEGER
+    (32) var -> . LOCAL_VAR
+    (33) var -> . INSTANCE_VAR
+    (34) var -> . CLASS_VAR
+    (35) var -> . GLOBAL_VAR
+
+    STRING          shift and go to state 64
+    NIL             shift and go to state 53
+    SYMBOL          shift and go to state 54
+    FLOAT           shift and go to state 65
+    INTEGER         shift and go to state 66
+    LOCAL_VAR       shift and go to state 67
+    INSTANCE_VAR    shift and go to state 68
+    CLASS_VAR       shift and go to state 69
+    GLOBAL_VAR      shift and go to state 70
+
+    var                            shift and go to state 63
+    value                          shift and go to state 178
+    num                            shift and go to state 52
+
+state 108
+
+    (89) variable_declaration -> var PLUS_ASSIGN . value
     (23) value -> . num
     (24) value -> . var
     (25) value -> . STRING
@@ -3882,7 +3886,7 @@ state 108
 
 state 109
 
-    (89) variable_declaration -> var PLUS_ASSIGN . value
+    (90) variable_declaration -> var MULTIPLY_ASSIGN . value
     (23) value -> . num
     (24) value -> . var
     (25) value -> . STRING
@@ -3911,7 +3915,7 @@ state 109
 
 state 110
 
-    (90) variable_declaration -> var MULTIPLY_ASSIGN . value
+    (91) variable_declaration -> var MINUS_ASSIGN . value
     (23) value -> . num
     (24) value -> . var
     (25) value -> . STRING
@@ -3940,7 +3944,7 @@ state 110
 
 state 111
 
-    (91) variable_declaration -> var MINUS_ASSIGN . value
+    (92) variable_declaration -> var DIVIDE_ASSIGN . value
     (23) value -> . num
     (24) value -> . var
     (25) value -> . STRING
@@ -4147,11 +4151,11 @@ state 123
     (63) conectores -> . OR_RESERVED
     (64) conectores -> . EQUAL
 
-    AND             shift and go to state 157
-    OR              shift and go to state 158
-    AND_RESERVED    shift and go to state 159
-    OR_RESERVED     shift and go to state 160
-    EQUAL           shift and go to state 161
+    AND             shift and go to state 156
+    OR              shift and go to state 157
+    AND_RESERVED    shift and go to state 158
+    OR_RESERVED     shift and go to state 159
+    EQUAL           shift and go to state 160
 
     conectores                     shift and go to state 192
 
@@ -4537,13 +4541,13 @@ state 139
     $end            reduce using rule 93 (store_conditional_result -> LOCAL_VAR ASSIGN condiciones .)
     END_LOWER       reduce using rule 93 (store_conditional_result -> LOCAL_VAR ASSIGN condiciones .)
     NEWLINE         reduce using rule 93 (store_conditional_result -> LOCAL_VAR ASSIGN condiciones .)
-    AND             shift and go to state 157
-    OR              shift and go to state 158
-    AND_RESERVED    shift and go to state 159
-    OR_RESERVED     shift and go to state 160
-    EQUAL           shift and go to state 161
+    AND             shift and go to state 156
+    OR              shift and go to state 157
+    AND_RESERVED    shift and go to state 158
+    OR_RESERVED     shift and go to state 159
+    EQUAL           shift and go to state 160
 
-    conectores                     shift and go to state 156
+    conectores                     shift and go to state 155
 
 state 140
 
@@ -4705,16 +4709,16 @@ state 144
     DIVIDE          shift and go to state 207
     MODULO          shift and go to state 208
     EXPONENT        shift and go to state 209
-    GREATER         shift and go to state 163
-    LESS            shift and go to state 164
-    GREATER_EQUAL   shift and go to state 165
-    LESS_EQUAL      shift and go to state 166
-    EQUAL           shift and go to state 167
-    NOT_EQUAL       shift and go to state 168
-    COMPARE         shift and go to state 169
+    GREATER         shift and go to state 162
+    LESS            shift and go to state 163
+    GREATER_EQUAL   shift and go to state 164
+    LESS_EQUAL      shift and go to state 165
+    EQUAL           shift and go to state 166
+    NOT_EQUAL       shift and go to state 167
+    COMPARE         shift and go to state 168
 
     arithmetic_operators           shift and go to state 213
-    operComp                       shift and go to state 162
+    operComp                       shift and go to state 161
 
 state 145
 
@@ -4732,34 +4736,6 @@ state 146
 
 
 state 147
-
-    (92) variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .
-
-    PUT             reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    GETS            reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    LOCAL_VAR       reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    INTEGER         reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    FLOAT           reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    STRING          reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    SET             reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    IF              reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    WHILE           reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    UNLESS          reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    INSTANCE_VAR    reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    CLASS_VAR       reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    GLOBAL_VAR      reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    CONSTANT        reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    NIL             reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    SYMBOL          reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    LEFT_COR        reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    PERCENTW        reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    ARRAY           reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    $end            reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    END_LOWER       reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-    NEWLINE         reduce using rule 92 (variable_declaration -> LOCAL_VAR DIVIDE_ASSIGN value .)
-
-
-state 148
 
     (47) array_explicito -> LEFT_COR values RIGHT_COR .
 
@@ -4788,14 +4764,14 @@ state 148
     RIGHTPAR        reduce using rule 47 (array_explicito -> LEFT_COR values RIGHT_COR .)
 
 
-state 149
+state 148
 
     (55) acceder_arreglo -> var_arreglo LEFT_COR INTEGER . RIGHT_COR
 
     RIGHT_COR       shift and go to state 217
 
 
-state 150
+state 149
 
     (130) comparador -> value EQUAL value .
 
@@ -4823,7 +4799,7 @@ state 150
     NEWLINE         reduce using rule 130 (comparador -> value EQUAL value .)
 
 
-state 151
+state 150
 
     (131) comparador -> value COMPARE value .
 
@@ -4851,7 +4827,7 @@ state 151
     NEWLINE         reduce using rule 131 (comparador -> value COMPARE value .)
 
 
-state 152
+state 151
 
     (87) hash_operations -> hash_access ASSIGN value .
 
@@ -4879,21 +4855,21 @@ state 152
     NEWLINE         reduce using rule 87 (hash_operations -> hash_access ASSIGN value .)
 
 
-state 153
+state 152
 
     (132) set_expression -> SET DOT NEW . LEFTPAR LEFT_COR values RIGHT_COR RIGHTPAR
 
     LEFTPAR         shift and go to state 218
 
 
-state 154
+state 153
 
     (133) set_expression -> SET LEFT_COR values . RIGHT_COR
 
     RIGHT_COR       shift and go to state 219
 
 
-state 155
+state 154
 
     (56) ifStatement -> IF condiciones NEWLINE . codigo END_LOWER
     (57) ifStatement -> IF condiciones NEWLINE . codigo NEWLINE else_statement END_LOWER
@@ -4968,7 +4944,7 @@ state 155
     (89) variable_declaration -> . var PLUS_ASSIGN value
     (90) variable_declaration -> . var MULTIPLY_ASSIGN value
     (91) variable_declaration -> . var MINUS_ASSIGN value
-    (92) variable_declaration -> . LOCAL_VAR DIVIDE_ASSIGN value
+    (92) variable_declaration -> . var DIVIDE_ASSIGN value
     (93) store_conditional_result -> . LOCAL_VAR ASSIGN condiciones
     (94) declare_data_structures -> . var_arreglo
     (95) declare_data_structures -> . hash_var
@@ -5060,7 +5036,7 @@ state 155
     var                            shift and go to state 47
     num                            shift and go to state 52
 
-state 156
+state 155
 
     (59) condiciones -> condiciones conectores . condiciones
     (58) condiciones -> . condicion
@@ -5083,11 +5059,11 @@ state 156
     GLOBAL_VAR      shift and go to state 70
 
     condiciones                    shift and go to state 221
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
-state 157
+state 156
 
     (60) conectores -> AND .
 
@@ -5099,7 +5075,7 @@ state 157
     GLOBAL_VAR      reduce using rule 60 (conectores -> AND .)
 
 
-state 158
+state 157
 
     (61) conectores -> OR .
 
@@ -5111,7 +5087,7 @@ state 158
     GLOBAL_VAR      reduce using rule 61 (conectores -> OR .)
 
 
-state 159
+state 158
 
     (62) conectores -> AND_RESERVED .
 
@@ -5123,7 +5099,7 @@ state 159
     GLOBAL_VAR      reduce using rule 62 (conectores -> AND_RESERVED .)
 
 
-state 160
+state 159
 
     (63) conectores -> OR_RESERVED .
 
@@ -5135,7 +5111,7 @@ state 160
     GLOBAL_VAR      reduce using rule 63 (conectores -> OR_RESERVED .)
 
 
-state 161
+state 160
 
     (64) conectores -> EQUAL .
 
@@ -5147,7 +5123,7 @@ state 161
     GLOBAL_VAR      reduce using rule 64 (conectores -> EQUAL .)
 
 
-state 162
+state 161
 
     (65) condicion -> num operComp . num
     (67) condicion -> num operComp . var
@@ -5168,7 +5144,7 @@ state 162
     num                            shift and go to state 222
     var                            shift and go to state 223
 
-state 163
+state 162
 
     (68) operComp -> GREATER .
 
@@ -5180,7 +5156,7 @@ state 163
     GLOBAL_VAR      reduce using rule 68 (operComp -> GREATER .)
 
 
-state 164
+state 163
 
     (69) operComp -> LESS .
 
@@ -5192,7 +5168,7 @@ state 164
     GLOBAL_VAR      reduce using rule 69 (operComp -> LESS .)
 
 
-state 165
+state 164
 
     (70) operComp -> GREATER_EQUAL .
 
@@ -5204,7 +5180,7 @@ state 165
     GLOBAL_VAR      reduce using rule 70 (operComp -> GREATER_EQUAL .)
 
 
-state 166
+state 165
 
     (71) operComp -> LESS_EQUAL .
 
@@ -5216,7 +5192,7 @@ state 166
     GLOBAL_VAR      reduce using rule 71 (operComp -> LESS_EQUAL .)
 
 
-state 167
+state 166
 
     (72) operComp -> EQUAL .
 
@@ -5228,7 +5204,7 @@ state 167
     GLOBAL_VAR      reduce using rule 72 (operComp -> EQUAL .)
 
 
-state 168
+state 167
 
     (73) operComp -> NOT_EQUAL .
 
@@ -5240,7 +5216,7 @@ state 168
     GLOBAL_VAR      reduce using rule 73 (operComp -> NOT_EQUAL .)
 
 
-state 169
+state 168
 
     (74) operComp -> COMPARE .
 
@@ -5252,7 +5228,7 @@ state 169
     GLOBAL_VAR      reduce using rule 74 (operComp -> COMPARE .)
 
 
-state 170
+state 169
 
     (66) condicion -> var operComp . num
     (36) num -> . FLOAT
@@ -5263,7 +5239,7 @@ state 170
 
     num                            shift and go to state 224
 
-state 171
+state 170
 
     (96) while_statement -> WHILE condiciones codigo . END_LOWER
     (2) codigo -> codigo . sentencia
@@ -5336,7 +5312,7 @@ state 171
     (89) variable_declaration -> . var PLUS_ASSIGN value
     (90) variable_declaration -> . var MULTIPLY_ASSIGN value
     (91) variable_declaration -> . var MINUS_ASSIGN value
-    (92) variable_declaration -> . LOCAL_VAR DIVIDE_ASSIGN value
+    (92) variable_declaration -> . var DIVIDE_ASSIGN value
     (93) store_conditional_result -> . LOCAL_VAR ASSIGN condiciones
     (94) declare_data_structures -> . var_arreglo
     (95) declare_data_structures -> . hash_var
@@ -5428,7 +5404,7 @@ state 171
     var                            shift and go to state 47
     num                            shift and go to state 52
 
-state 172
+state 171
 
     (142) unless_expression -> UNLESS boolean_expression THEN . expresion END
     (143) unless_expression -> UNLESS boolean_expression THEN . expresion ELSE expresion END
@@ -5469,11 +5445,11 @@ state 172
     print_statement                shift and go to state 120
     condition_with_connectors      shift and go to state 121
     condiciones                    shift and go to state 123
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
-state 173
+state 172
 
     (101) boolean_expression -> expression GREATER . expression
     (110) expression -> . INTEGER
@@ -5486,19 +5462,19 @@ state 173
     (117) variable -> . GLOBAL_VAR
     (118) variable -> . CONSTANT
 
-    INTEGER         shift and go to state 99
-    FLOAT           shift and go to state 100
-    STRING          shift and go to state 101
-    LOCAL_VAR       shift and go to state 104
-    INSTANCE_VAR    shift and go to state 105
-    CLASS_VAR       shift and go to state 106
-    GLOBAL_VAR      shift and go to state 107
+    INTEGER         shift and go to state 98
+    FLOAT           shift and go to state 99
+    STRING          shift and go to state 100
+    LOCAL_VAR       shift and go to state 103
+    INSTANCE_VAR    shift and go to state 104
+    CLASS_VAR       shift and go to state 105
+    GLOBAL_VAR      shift and go to state 106
     CONSTANT        shift and go to state 51
 
     expression                     shift and go to state 227
     variable                       shift and go to state 35
 
-state 174
+state 173
 
     (102) boolean_expression -> expression LESS . expression
     (110) expression -> . INTEGER
@@ -5511,19 +5487,19 @@ state 174
     (117) variable -> . GLOBAL_VAR
     (118) variable -> . CONSTANT
 
-    INTEGER         shift and go to state 99
-    FLOAT           shift and go to state 100
-    STRING          shift and go to state 101
-    LOCAL_VAR       shift and go to state 104
-    INSTANCE_VAR    shift and go to state 105
-    CLASS_VAR       shift and go to state 106
-    GLOBAL_VAR      shift and go to state 107
+    INTEGER         shift and go to state 98
+    FLOAT           shift and go to state 99
+    STRING          shift and go to state 100
+    LOCAL_VAR       shift and go to state 103
+    INSTANCE_VAR    shift and go to state 104
+    CLASS_VAR       shift and go to state 105
+    GLOBAL_VAR      shift and go to state 106
     CONSTANT        shift and go to state 51
 
     expression                     shift and go to state 228
     variable                       shift and go to state 35
 
-state 175
+state 174
 
     (103) boolean_expression -> expression GREATER_EQUAL . expression
     (110) expression -> . INTEGER
@@ -5536,19 +5512,19 @@ state 175
     (117) variable -> . GLOBAL_VAR
     (118) variable -> . CONSTANT
 
-    INTEGER         shift and go to state 99
-    FLOAT           shift and go to state 100
-    STRING          shift and go to state 101
-    LOCAL_VAR       shift and go to state 104
-    INSTANCE_VAR    shift and go to state 105
-    CLASS_VAR       shift and go to state 106
-    GLOBAL_VAR      shift and go to state 107
+    INTEGER         shift and go to state 98
+    FLOAT           shift and go to state 99
+    STRING          shift and go to state 100
+    LOCAL_VAR       shift and go to state 103
+    INSTANCE_VAR    shift and go to state 104
+    CLASS_VAR       shift and go to state 105
+    GLOBAL_VAR      shift and go to state 106
     CONSTANT        shift and go to state 51
 
     expression                     shift and go to state 229
     variable                       shift and go to state 35
 
-state 176
+state 175
 
     (104) boolean_expression -> expression LESS_EQUAL . expression
     (110) expression -> . INTEGER
@@ -5561,19 +5537,19 @@ state 176
     (117) variable -> . GLOBAL_VAR
     (118) variable -> . CONSTANT
 
-    INTEGER         shift and go to state 99
-    FLOAT           shift and go to state 100
-    STRING          shift and go to state 101
-    LOCAL_VAR       shift and go to state 104
-    INSTANCE_VAR    shift and go to state 105
-    CLASS_VAR       shift and go to state 106
-    GLOBAL_VAR      shift and go to state 107
+    INTEGER         shift and go to state 98
+    FLOAT           shift and go to state 99
+    STRING          shift and go to state 100
+    LOCAL_VAR       shift and go to state 103
+    INSTANCE_VAR    shift and go to state 104
+    CLASS_VAR       shift and go to state 105
+    GLOBAL_VAR      shift and go to state 106
     CONSTANT        shift and go to state 51
 
     expression                     shift and go to state 230
     variable                       shift and go to state 35
 
-state 177
+state 176
 
     (105) boolean_expression -> expression EQUAL . expression
     (110) expression -> . INTEGER
@@ -5586,19 +5562,19 @@ state 177
     (117) variable -> . GLOBAL_VAR
     (118) variable -> . CONSTANT
 
-    INTEGER         shift and go to state 99
-    FLOAT           shift and go to state 100
-    STRING          shift and go to state 101
-    LOCAL_VAR       shift and go to state 104
-    INSTANCE_VAR    shift and go to state 105
-    CLASS_VAR       shift and go to state 106
-    GLOBAL_VAR      shift and go to state 107
+    INTEGER         shift and go to state 98
+    FLOAT           shift and go to state 99
+    STRING          shift and go to state 100
+    LOCAL_VAR       shift and go to state 103
+    INSTANCE_VAR    shift and go to state 104
+    CLASS_VAR       shift and go to state 105
+    GLOBAL_VAR      shift and go to state 106
     CONSTANT        shift and go to state 51
 
     expression                     shift and go to state 231
     variable                       shift and go to state 35
 
-state 178
+state 177
 
     (106) boolean_expression -> expression NOT_EQUAL . expression
     (110) expression -> . INTEGER
@@ -5611,19 +5587,19 @@ state 178
     (117) variable -> . GLOBAL_VAR
     (118) variable -> . CONSTANT
 
-    INTEGER         shift and go to state 99
-    FLOAT           shift and go to state 100
-    STRING          shift and go to state 101
-    LOCAL_VAR       shift and go to state 104
-    INSTANCE_VAR    shift and go to state 105
-    CLASS_VAR       shift and go to state 106
-    GLOBAL_VAR      shift and go to state 107
+    INTEGER         shift and go to state 98
+    FLOAT           shift and go to state 99
+    STRING          shift and go to state 100
+    LOCAL_VAR       shift and go to state 103
+    INSTANCE_VAR    shift and go to state 104
+    CLASS_VAR       shift and go to state 105
+    GLOBAL_VAR      shift and go to state 106
     CONSTANT        shift and go to state 51
 
     expression                     shift and go to state 232
     variable                       shift and go to state 35
 
-state 179
+state 178
 
     (88) variable_declaration -> var ASSIGN value .
 
@@ -5651,7 +5627,7 @@ state 179
     NEWLINE         reduce using rule 88 (variable_declaration -> var ASSIGN value .)
 
 
-state 180
+state 179
 
     (89) variable_declaration -> var PLUS_ASSIGN value .
 
@@ -5679,7 +5655,7 @@ state 180
     NEWLINE         reduce using rule 89 (variable_declaration -> var PLUS_ASSIGN value .)
 
 
-state 181
+state 180
 
     (90) variable_declaration -> var MULTIPLY_ASSIGN value .
 
@@ -5707,7 +5683,7 @@ state 181
     NEWLINE         reduce using rule 90 (variable_declaration -> var MULTIPLY_ASSIGN value .)
 
 
-state 182
+state 181
 
     (91) variable_declaration -> var MINUS_ASSIGN value .
 
@@ -5733,6 +5709,34 @@ state 182
     $end            reduce using rule 91 (variable_declaration -> var MINUS_ASSIGN value .)
     END_LOWER       reduce using rule 91 (variable_declaration -> var MINUS_ASSIGN value .)
     NEWLINE         reduce using rule 91 (variable_declaration -> var MINUS_ASSIGN value .)
+
+
+state 182
+
+    (92) variable_declaration -> var DIVIDE_ASSIGN value .
+
+    PUT             reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    GETS            reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    LOCAL_VAR       reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    INTEGER         reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    FLOAT           reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    STRING          reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    SET             reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    IF              reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    WHILE           reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    UNLESS          reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    INSTANCE_VAR    reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    CLASS_VAR       reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    GLOBAL_VAR      reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    CONSTANT        reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    NIL             reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    SYMBOL          reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    LEFT_COR        reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    PERCENTW        reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    ARRAY           reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    $end            reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    END_LOWER       reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
+    NEWLINE         reduce using rule 92 (variable_declaration -> var DIVIDE_ASSIGN value .)
 
 
 state 183
@@ -5915,9 +5919,9 @@ state 192
     GLOBAL_VAR      shift and go to state 70
 
     condiciones                    shift and go to state 240
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
 state 193
 
@@ -6456,7 +6460,7 @@ state 220
     (89) variable_declaration -> . var PLUS_ASSIGN value
     (90) variable_declaration -> . var MULTIPLY_ASSIGN value
     (91) variable_declaration -> . var MINUS_ASSIGN value
-    (92) variable_declaration -> . LOCAL_VAR DIVIDE_ASSIGN value
+    (92) variable_declaration -> . var DIVIDE_ASSIGN value
     (93) store_conditional_result -> . LOCAL_VAR ASSIGN condiciones
     (94) declare_data_structures -> . var_arreglo
     (95) declare_data_structures -> . hash_var
@@ -6589,11 +6593,11 @@ state 221
     RBRACE          reduce using rule 59 (condiciones -> condiciones conectores condiciones .)
     END             reduce using rule 59 (condiciones -> condiciones conectores condiciones .)
     ELSE            reduce using rule 59 (condiciones -> condiciones conectores condiciones .)
-    AND             shift and go to state 157
-    OR              shift and go to state 158
-    AND_RESERVED    shift and go to state 159
-    OR_RESERVED     shift and go to state 160
-    EQUAL           shift and go to state 161
+    AND             shift and go to state 156
+    OR              shift and go to state 157
+    AND_RESERVED    shift and go to state 158
+    OR_RESERVED     shift and go to state 159
+    EQUAL           shift and go to state 160
 
   ! AND             [ reduce using rule 59 (condiciones -> condiciones conectores condiciones .) ]
   ! OR              [ reduce using rule 59 (condiciones -> condiciones conectores condiciones .) ]
@@ -6601,7 +6605,7 @@ state 221
   ! OR_RESERVED     [ reduce using rule 59 (condiciones -> condiciones conectores condiciones .) ]
   ! EQUAL           [ reduce using rule 59 (condiciones -> condiciones conectores condiciones .) ]
 
-    conectores                     shift and go to state 156
+    conectores                     shift and go to state 155
 
 state 222
 
@@ -6933,9 +6937,9 @@ state 238
     print_statement                shift and go to state 120
     condition_with_connectors      shift and go to state 121
     condiciones                    shift and go to state 123
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
 state 239
 
@@ -6964,11 +6968,11 @@ state 240
     END             reduce using rule 97 (condition_with_connectors -> condiciones conectores condiciones .)
     END_LOWER       reduce using rule 97 (condition_with_connectors -> condiciones conectores condiciones .)
     ELSE            reduce using rule 97 (condition_with_connectors -> condiciones conectores condiciones .)
-    AND             shift and go to state 157
-    OR              shift and go to state 158
-    AND_RESERVED    shift and go to state 159
-    OR_RESERVED     shift and go to state 160
-    EQUAL           shift and go to state 161
+    AND             shift and go to state 156
+    OR              shift and go to state 157
+    AND_RESERVED    shift and go to state 158
+    OR_RESERVED     shift and go to state 159
+    EQUAL           shift and go to state 160
 
   ! AND             [ reduce using rule 59 (condiciones -> condiciones conectores condiciones .) ]
   ! OR              [ reduce using rule 59 (condiciones -> condiciones conectores condiciones .) ]
@@ -6976,7 +6980,7 @@ state 240
   ! OR_RESERVED     [ reduce using rule 59 (condiciones -> condiciones conectores condiciones .) ]
   ! EQUAL           [ reduce using rule 59 (condiciones -> condiciones conectores condiciones .) ]
 
-    conectores                     shift and go to state 156
+    conectores                     shift and go to state 155
 
 state 241
 
@@ -7019,9 +7023,9 @@ state 241
     print_statement                shift and go to state 120
     condition_with_connectors      shift and go to state 121
     condiciones                    shift and go to state 123
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
 state 242
 
@@ -7610,9 +7614,9 @@ state 262
     print_statement                shift and go to state 120
     condition_with_connectors      shift and go to state 121
     condiciones                    shift and go to state 123
-    condicion                      shift and go to state 92
-    num                            shift and go to state 93
-    var                            shift and go to state 94
+    condicion                      shift and go to state 91
+    num                            shift and go to state 92
+    var                            shift and go to state 93
 
 state 263
 
@@ -8012,7 +8016,7 @@ state 283
     (89) variable_declaration -> . var PLUS_ASSIGN value
     (90) variable_declaration -> . var MULTIPLY_ASSIGN value
     (91) variable_declaration -> . var MINUS_ASSIGN value
-    (92) variable_declaration -> . LOCAL_VAR DIVIDE_ASSIGN value
+    (92) variable_declaration -> . var DIVIDE_ASSIGN value
     (93) store_conditional_result -> . LOCAL_VAR ASSIGN condiciones
     (94) declare_data_structures -> . var_arreglo
     (95) declare_data_structures -> . hash_var
@@ -8252,7 +8256,7 @@ state 288
     (89) variable_declaration -> . var PLUS_ASSIGN value
     (90) variable_declaration -> . var MULTIPLY_ASSIGN value
     (91) variable_declaration -> . var MINUS_ASSIGN value
-    (92) variable_declaration -> . LOCAL_VAR DIVIDE_ASSIGN value
+    (92) variable_declaration -> . var DIVIDE_ASSIGN value
     (93) store_conditional_result -> . LOCAL_VAR ASSIGN condiciones
     (94) declare_data_structures -> . var_arreglo
     (95) declare_data_structures -> . hash_var

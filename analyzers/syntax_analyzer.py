@@ -3,6 +3,7 @@ import os
 import sys
 import ply.yacc as yacc
 from analyzers.lexical_analyzer import tokens, reserved
+import re
 
 variablesString = {}
 variablesNum = {}
@@ -61,8 +62,19 @@ def p_values_space(p):
 
 def p_values(p):
     ''' values : value
-               | value COMMA values 
-               '''
+               | value COMMA values'''
+    if isinstance(p[1], str):
+        string_regex = re.compile(r'^[\'"][^"]*[\'"]$')
+        string_match = string_regex.match(p[1])
+        if string_match != None:
+            return
+
+    left_value = get_variable_value(p[1])
+    try:
+        right_value = get_variable_value(p[3])
+    except IndexError:
+        right_value = False
+
 
 def p_var(p):
     ''' var : LOCAL_VAR
@@ -702,6 +714,11 @@ my_proc.call()
 my_proc.()
 my_proc[]
 other_proc.call()
+puts h
+puts \"hello\"
+[1, 2, h]
+other_proc = Proc.new {puts h}
+print g
 """
 
 def p_error(p):
@@ -738,7 +755,7 @@ def capture_semantic_errors(input_code):
 
 
 # Ejecutar la función para capturar errores semánticos en algoritmoAngel
-capture_semantic_errors(algoritmoSemanticoAmador)
+#capture_semantic_errors(algoritmoSemanticoAmador)
 ''' 
 # Lógica para capturar errores sintácticos
 while True:
