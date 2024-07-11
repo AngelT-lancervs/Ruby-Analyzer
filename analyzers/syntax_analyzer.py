@@ -348,6 +348,7 @@ def p_declaraciones(p):
                       | LOCAL_VAR ASSIGN arithmetic_production
                       | declaracion_concatenar_string
                       | proc_assignment
+                      | range_declare
     '''
 
 # Expresiones
@@ -402,6 +403,9 @@ def get_variable_value(variable):
         return variable 
 
 #-----------------Andrés Armador-----------------
+def p_range_declare(p):
+    """range_declare : LOCAL_VAR ASSIGN range_expression"""
+
 def p_range_expression(p):
     """range_expression : value RANGEIN value
                         | value RANGEEX value

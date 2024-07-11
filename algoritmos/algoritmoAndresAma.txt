@@ -1,0 +1,15 @@
+my_proc = Proc.new do puts 2 end
+my_proc.call()
+my_proc.call(1, 2, 3)
+other_proc.call()
+another_proc = Proc.new { |x| puts x }
+another_proc.call(5)
+another_proc.call(5, 6)
+a = (1..2)
+(1..2).to_a
+(1...2).to_a
+(0.01..0.02).to_a
+(0.01...0.02).to_a
+('a'...'d').to_a
+Set.new([1, 2, 3, 4, 5]) | Set.new([4, 5, 6, 7, 8])
+Set.new([1, 2, 3, 4, 5]) & Set.new([4, 5, 6, 7, 8])
