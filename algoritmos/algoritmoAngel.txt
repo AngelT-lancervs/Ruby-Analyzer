@@ -29,12 +29,12 @@ else
   		puts "a es mayor que 4"
 	else
   		puts "a no es mayor que 4"
-		while contador < 5 :
+		while contador < 5
   			puts "Contador: #{contador}"
   			contador = 1
 			contador = 1 + contador
 		hash={"Pepe" => 123, "Pepee" => 23, "Pepito" => 4232}
-		
+		end
 	end
 end
 

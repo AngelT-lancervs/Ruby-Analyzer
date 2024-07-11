@@ -63,17 +63,6 @@ def p_values_space(p):
 def p_values(p):
     ''' values : value
                | value COMMA values'''
-    if isinstance(p[1], str):
-        string_regex = re.compile(r'^[\'"][^"]*[\'"]$')
-        string_match = string_regex.match(p[1])
-        if string_match != None:
-            return
-
-    left_value = get_variable_value(p[1])
-    try:
-        right_value = get_variable_value(p[3])
-    except IndexError:
-        right_value = False
 
 
 def p_var(p):
@@ -142,8 +131,8 @@ def p_acceder_arreglo(p):
 
 # Estructura de control (if)
 def p_ifStatement(p):
-    ''' ifStatement : IF condiciones NEWLINE codigo END_LOWER
-                     | IF condiciones NEWLINE codigo NEWLINE else_statement END_LOWER
+    ''' ifStatement : IF condiciones codigo END_LOWER
+                     | IF condiciones codigo else_statement END_LOWER
     '''
 
 def p_condiciones(p):
@@ -179,7 +168,7 @@ def p_operComp(p):
     '''
 
 def p_else_statement(p):
-    ''' else_statement : ELSE NEWLINE codigo
+    ''' else_statement : ELSE codigo
     '''
 
 def p_to_string(p):
@@ -277,11 +266,11 @@ def p_hash_operations(p):
 
 # Reglas sintácticas mínimas
 def p_variable_declaration(p):
-    ''' variable_declaration : var ASSIGN value
-                             | var PLUS_ASSIGN value
-                             | var MULTIPLY_ASSIGN value
-                             | var MINUS_ASSIGN value
-                             | var DIVIDE_ASSIGN value
+    ''' variable_declaration : LOCAL_VAR ASSIGN value
+                             | LOCAL_VAR PLUS_ASSIGN value
+                             | LOCAL_VAR MULTIPLY_ASSIGN value
+                             | LOCAL_VAR MINUS_ASSIGN value
+                             | LOCAL_VAR DIVIDE_ASSIGN value
     '''
     if isinstance(p[3], str):
         variablesString[p[1]] = p[3]
@@ -493,12 +482,19 @@ def p_proc_assignment(p):
 def p_proc_call(p):
     """proc_call : LOCAL_VAR DOT CALL LEFTPAR values RIGHTPAR
                  | LOCAL_VAR DOT LEFTPAR values RIGHTPAR
-                 | LOCAL_VAR LEFT_COR values RIGHT_COR
                  | LOCAL_VAR DOT CALL LEFTPAR RIGHTPAR
-                 | LOCAL_VAR DOT LEFTPAR RIGHTPAR
-                 | LOCAL_VAR LEFT_COR RIGHT_COR"""
+                 | LOCAL_VAR DOT LEFTPAR RIGHTPAR"""
     
     if p[1] in variablesProc:
+        pass
+    else:
+        print(f"Error semántico: La variable \"{p[1]}\" no existe o no es un proc")
+
+def p_proc_call_cor(p):
+    """proc_call : LOCAL_VAR LEFT_COR values RIGHT_COR
+                 | LOCAL_VAR LEFT_COR RIGHT_COR"""
+    
+    if p[1] in variablesProc or p[1] in arreglos:
         pass
     else:
         print(f"Error semántico: La variable \"{p[1]}\" no existe o no es un proc")
@@ -508,218 +504,6 @@ def p_condition_expr(p):
 
 
 #-----------------------------------------------------------------------
-
-algoritmoAngel = """
-class Animal
-  def initialize(name, species)
-    @name = name
-    @species = species
-    _numfloat = 3.21
-  end
-
-  def greet
-    puts "Hello, I'm #{@name}, a #{@species}."
-  end
-end
-
-class Zoo
-  attr_reader :animals
-
-  def initialize(name)
-    @name = name
-    @animals = []
-  end
-
-  def add_animal(animal)
-    @animals << animal
-  end
-
-  def show_animals
-    puts "Animals in #{@name} Zoo:"
-    if @name == 3 
-        @animals.each do |animal|
-      animal.greet
-        end
-    end
-  end
-end
-
-def fibonacci(n)
-  return n if n <= 1.4
-
-  fib = [0, 1]
-  (2..n).each do |i|
-    fib[i] = fib[i - 1] + fib[i - 2]
-  end
-
-  fib[n]
-end
-
-zoo = Zoo.new("Wildlife")
-zoo.add_animal(Animal.new("Buddy", "Dog"))
-zoo.add_animal(Animal.new("Charlie", "Cat"))
-zoo.add_animal(Animal.new("Ella", "Elephant"))
-
-zoo.show_animals
-
-puts "Fibonacci sequence:"
-10.times do |i|
-  puts "Fibonacci(#{i}): #{fibonacci(i)}"
-end
-
-arrMal = 1212[xdd
-"""
-
-algoritmoAndresCornejo = """
-puts "xddd"
-puts(hola mundo)
-mi_hash = { 'nombre' => 'Juan', 'edad' => 30 }
-mi_hash = { 'nombre' => 'Juan', 'edad' => 30, }
-
-while contador < 5
-  puts "Contador: #{contador}"
-  contador += 1
-end
-
-contador = 0
-while contador < 5
-  puts "Contador: #{contador}"
-end
-
-mi_hash = { 'nombre' => 'Juan', 'edad' => 30 }
-nombre = mi_hash['nombre']
-puts "Nombre: #{nombre}"
-
-mi_hash['edad'] = 31
-
-mi_hash['ciudad'] = 'Bogotá'
-
-mi_hash.delete('edad')
-
-puts "Hash actualizado: #{mi_hash}"
-
-a = 10
-b = 20
-
-if a > b
-  puts "a es mayor que b"
-else
-  puts "a no es mayor que b"
-end
-
-is_raining = true
-umbrella_available = false
-
-if is_raining === umbrella_available
-  puts "Tengo paraguas para la lluvia"
-else
-  puts "No tengo paraguas para la lluvia"
-end
-
-
-"""
-
-algoritmoAmador = """
-require 'set'
-
-# Declaración de Sets y operaciones de Sets
-set1 = Set.new([1, 2, 3])
-set2 = Set.new([3, 4, 5])
-
-union_set = set1 | set2
-intersection_set = set1 & set2
-difference_set = set1 - set2
-
-puts "Union de sets: #{union_set.to_a}"
-puts "Intersección de sets: #{intersection_set.to_a}"
-puts "Diferencia de sets: #{difference_set.to_a}"
-
-# Expresión unless
-x = 10
-y = 5
-
-unless y >= x
-  puts "y es menor que x"
-end
-
-unless x < y
-  puts "x no es menor que y"
-end
-
-# Expresión aritmética
-a = 10
-b = 5
-
-sum = a + b
-difference = a - b
-product = a * b
-quotient = a / b
-modulo = a % b
-
-puts "Suma: #{sum}"
-puts "Resta: #{difference}"
-puts "Producto: #{product}"
-puts "Cociente: #{quotient}"
-puts "Modulo: #{modulo}"
-
-# Asignación de block
-block = proc { |x| x * 2 }
-result = block.call(5)
-
-puts "Resultado del bloque: #{result}"
-
-# Asignación y llamada de procs
-my_proc = Proc.new { |x, y| x + y }
-proc_result = my_proc.call(2, 3)
-
-puts "Resultado del proc: #{proc_result}"
-
-"""
-#------------------------
-algoritmoAndresCornejoSemantico = """
-hash={}
-hash={"Pepe" => 123, "Pepee" => 23, "Pepito" => 4232}
-hash={"Juan" => 123, "Juan" => 23, "Juan" => 4232}
-hash={"Juana" => 123, "Juan" => 23, "Jaunita" => 4232}
-hash={"Pepe" => 123, "Juan" => 23, "Pepe" => 4232}
-a = 1
-b = 2
-a == b
-a = 1
-b == 3
-b = 2
-a == b
-"""
-
-algoritmoAngelTomala = """
-op = 1-8
-op.to_s
-var3 = 4-5+"xd"
-lol = "bronce" + "plata"
-valorant = "neon" - 5
-lolmal = 4-lolitofede
-variable = a + 5
-a = 1 
-b = "xd"
-c = a + b
-var = 1 -8 +5 - num
-d = 15
-d.to_s
-string  = "xd" + d
-jl = a -8
-"""
-
-algoritmoSemanticoAmador = """my_proc = Proc.new do puts 2 end
-my_proc.call()
-my_proc.()
-my_proc[]
-other_proc.call()
-puts h
-puts \"hello\"
-[1, 2, h]
-other_proc = Proc.new {puts h}
-print g
-"""
 
 def p_error(p):
     if p:
@@ -750,58 +534,3 @@ def capture_semantic_errors(input_code):
         sys.stdout = sys.__stdout__
     
     print("Análisis completado. Los errores semánticos se han guardado en el archivo de registro:", log_filename)
-
-# Algoritmo de ejemplo para errores sintácticos
-
-
-# Ejecutar la función para capturar errores semánticos en algoritmoAngel
-#capture_semantic_errors(algoritmoSemanticoAmador)
-''' 
-# Lógica para capturar errores sintácticos
-while True:
-    try:
-        s = input('ruby > ')
-    except EOFError:
-        break
-    if not s:
-        continue
-    
-    # Definir el archivo de registro para errores sintácticos
-    log_filename = f"sintactico-AngelT-lancervs-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
-    log_directory = "logs/syntax/"
-    log_filepath = os.path.join(log_directory, log_filename)
-
-    with open(log_filepath, "w") as f:
-        sys.stdout = f
-        result = parser.parse(s)
-        sys.stdout = sys.__stdout__
-    
-    print("Análisis completado. Los errores sintácticos se han guardado en el archivo de registro:", log_filename)
-''' 
-''' 
-while True:
-    try:
-        s = input('ruby > ')
-    except EOFError:
-        break
-    if not s:
-        continue
-    result = parser.parse(s)
-    print(result)
-
-
-#ASIGNAR AL ALGORITMO
-s = algoritmoAngel
-log_filename = f"sintactico-AngelT-lancervs-{datetime.datetime.now().strftime('%Y%m%d-%Hh%M')}.txt"
-log_directory = "logs/syntax/"
-
-log_filepath = os.path.join(log_directory, log_filename)
-
-with open(log_filepath, "w") as f:
-    sys.stdout = f
-    result = parser.parse(s)
-    sys.stdout = sys.__stdout__
-    print("Análisis completado. Los errores sintácticos se han guardado en el archivo de registro:", log_filename)
-
-
-'''
