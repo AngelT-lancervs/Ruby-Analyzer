@@ -44,6 +44,7 @@ reserved = {
     'Set' : 'SET',
     'Proc' : 'PROC',
     'call' : 'CALL',
+    'to_a' : 'TO_A',
 }
 
 
@@ -195,7 +196,7 @@ def t_CONSTANT(t):
     return t
 
 def t_FLOAT(t):
-    r'(\d+\.\d*|\d*\.\d+)'
+    r'\d+\.\d+'
     t.value = float(t.value)
     return t
 

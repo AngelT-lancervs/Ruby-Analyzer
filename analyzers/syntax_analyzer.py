@@ -28,7 +28,9 @@ def p_sentencia(p):
                  | declaraciones
                  | expression
                  | to_string
-                 | comparador'''
+                 | comparador
+                 | range_expression
+                 | range_to_a'''
 
 def p_estructurasDatos(p):
     ''' estructurasDatos : array
@@ -400,6 +402,37 @@ def get_variable_value(variable):
         return variable 
 
 #-----------------Andrés Armador-----------------
+def p_range_expression(p):
+    """range_expression : value RANGEIN value
+                        | value RANGEEX value
+                        | LEFTPAR value RANGEIN value RIGHTPAR
+                        | LEFTPAR value RANGEEX value RIGHTPAR"""
+    
+    if len(p) == 4:
+        if type(p[1]) != type(p[3]):
+            print('Error semantico: Valores distintos en rango')
+            return
+    if len(p) == 6:
+        if type(p[2]) != type(p[4]):
+            print('Error semantico: Valores distintos en rango')
+            return
+
+#Regla semantica 2 (rango a arreglo) Andres Amador
+def p_range_to_a(p):
+    """range_to_a : LEFTPAR value RANGEIN value RIGHTPAR DOT TO_A
+                  | LEFTPAR value RANGEEX value RIGHTPAR DOT TO_A"""
+    
+    if type(p[2]) != type(p[4]):
+        print('Error semántico: Valores distintos en rango')
+        return
+    
+    if isinstance(p[2], float) or isinstance(p[4], float):
+        print("Error semántico: No se puede convertir a arreglo un rango de flotantes")
+        return
+
+
+
+
 def p_set_expression(p):
     """set_expression : SET DOT NEW LEFTPAR LEFT_COR values RIGHT_COR RIGHTPAR
                       | SET LEFT_COR values RIGHT_COR"""
